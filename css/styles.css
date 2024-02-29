@@ -2,7 +2,16 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    scroll-behavior: smooth;
+    list-style: none;
+    text-decoration: none;
     z-index: 0;
+    font-family: "Lexend", sans-serif;
+}
+
+section{
+    width: 100%;
+    height: 50%;
 }
 
 :root{
@@ -10,6 +19,7 @@
     --p-size: 2rem
 }
 
+/* Header */
 .header{
     display: flex;
     position: fixed;
@@ -17,8 +27,14 @@
     justify-content: space-between;
 
     padding: 1rem;
-    background-color: #113;
+    background-color: rgb(146, 107, 87);
     width: 100%;
+    z-index: 100;
+}
+
+.logo img{
+    width: 40px;
+    height: 40px;
 }
 
 .btnOpen, .btnClose{
@@ -35,18 +51,124 @@
 .nav-links li a{
     text-decoration: none;
     color: #FFFF;
+    font-size: 1.5rem;
 }
 
 /* section 1 */
+.wrp{
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
 
-section{
+.bg{
+    width: 100%;    
+    height: 100%;
+    background: url(../img/adandios.jpg);
+}
+
+.content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    top: 0;
+    left: 0;
+    padding: 20px;
+    position: absolute;
     width: 100%;
     height: 100%;
+    backdrop-filter: blur(4px);
 }
-img{
+
+.content .info{
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+}
+
+.content .info h1{
+    color: #1e1e1e;
+    font-size: var(--h1-size);
+    text-shadow: 0px 1px 10px #111a;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+}
+
+.content .info p{
+    font-size: 1.5rem;
+}
+
+.wave{
+    position: absolute;
+    width: 100%;
+    bottom: -10px;
+}
+
+.wave img{
     width: 100%;
 }
-@media screen and (max-width: 550px ) {
+
+/* Section 2 */
+.title{
+    text-align: center;
+    padding-top: 50px ;
+    font-size: var(--h1-size);
+}
+
+.slider-box{
+    width: 100%;
+    height: auto;
+    margin: 50px auto 0px;
+    overflow: hidden;
+}
+
+.slider-box ul{
+    display: flex;
+    padding: 0;
+    width: 400%;
+    animation: slide 20s infinite alternate ease-in-out;
+}
+
+.slider-box li{
+    width: 25%;
+    position: relative;
+}
+
+.text{
+    position: absolute;
+    text-align: center;
+    padding: 0 250px;   
+    top: 400px;
+    color: white;
+}
+
+.text h2{
+    font-size: 45px;
+    margin-bottom: 35px;
+}
+
+.slider-box img{
+    width: 100%;
+    height: 100vh;
+    filter: blur(5px);
+}
+
+@keyframes slide {
+    0% {margin-left: 0%;}
+    20% {margin-left: 0%;}
+
+    25% {margin-left: -100%;}
+    45% {margin-left: -100%;}    
+
+    50% {margin-left: -200%;}
+    70% {margin-left: -200%;}
+
+    75% {margin-left: -300%;}
+    100% {margin-left: -300%;}
+}
+
+@media screen and (max-width: 770px ) {
     .btnOpen{
         display: block;
         color: #FFFF;
@@ -96,5 +218,30 @@ img{
 
         flex-direction: column;
         align-items: center;
+    }
+
+    /* section 1 */
+
+    .content.info h1{
+        font-size: 35px;
+    }
+
+    /* section 2 */
+    .slider-box{
+        width: 100%;
+    }
+
+    .text{
+        top: 50%;
+        padding: 0 25px;
+    }
+
+    .text h2{
+        font-size: 35px;
+        margin-bottom: 15px;
+    }
+
+    .text p{
+        font-size: 15px;
     }
 }
