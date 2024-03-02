@@ -21,7 +21,7 @@ const loadDepartaments = async () => {
 
 const loadInfoTable = async () => {
 
-    const info = await document.getElementById("info-table");
+    const info = document.getElementById("info-table");
 
     for (let i of departamentArray) {
         const name = i.nombre;
@@ -48,40 +48,13 @@ const loadInfoTable = async () => {
     
 }
 
-/*const loadTables = async () => {
-
-    const departamentsTable = document.getElementById("table");
-    departamentsTable.innerHTML = `
-    
-    <h1 class="text-center">Departamentos</h1>
-            <div class="table-responsive">
-                <table class="table table-striped table-hover table-borderless table-primary align-middle">
-                    <thead class="table-light">
-                        <caption>
-                            Table Name
-                        </caption>
-                        <tr>
-                            <th>ID</th>
-                            <th>Departamentos</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-group-divider id="info-table">
-
-                    </tbody>
-                    <tfoot>
-
-                    </tfoot>
-                </table>
-            </div>
-
-    `
-
-    
-}*/
-
 const loadDataTable=async()=>{
-    //await loadTables();
     loadInfoTable();
 }
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadDepartaments();
+    await loadDataTable();
+})
 
 console.log(departamentArray);
