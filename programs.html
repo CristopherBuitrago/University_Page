@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Css -->
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <title>Document</title>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="index.html"><img src="img/logo.png" alt=""></a>
+        </div>
+        <button class="btnOpen" id="btnOpen"><i class='bx bx-menu bx-tada'></i></button>
+        <nav class="nav" id="nav">
+            <button class="btnClose" id="btnClose"><i class='bx bx-x bx-tada'></i></button>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="departaments.html">Departaments</a></li>
+                <li><a href="periods.html">Periods</a></li>
+                <li><a href="rates.html">Rates</a></li>
+                <li><a href="classrooms.html">Classrooms</a></li>
+                <li><a href="programs.html">Programs</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- main -->
+    <section id="main">
+        <div class="wrp">
+            <div class="bg4">
+
+            </div>
+            <div class="content">
+                <div class="info">
+                    <h1>Universidad de los Sabios</h1>
+                    <br>
+                    <p>Programas, los pilares del saber</p>
+                </div>
+            </div>
+            <div class="wave">
+                <img src="img/img2.svg" alt="fondo">
+            </div>
+        </div>
+    </section>
+
+    <!-- Programs -->
+    <section id="programs" class="mt-5">
+
+        <div class="container " id="table">
+            <h1 class="text-center">Programas</h1>
+            <hr>
+            <h3>Bienvenido</h3>
+            <p>
+                Este es un listado de nuestros Programas. Es el comienzo, un nuevo rumbo hacia el futuro, <br>
+                el trazo que definirá tu ser
+            </p>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-borderless table-primary align-middle">
+                    <thead class="table-light">
+                        <caption>
+                            Universidad de los sabios
+                        </caption>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Nivel</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider" id="info-program">
+
+                    </tbody>
+                    <tfoot>
+
+                    </tfoot>
+                </table>
+            </div>
+
+        </div>
+    
+    </section>
+    <!-- Js -->
+    <script src="js/programs.js"></script>
+    <script src="js/nav.js"></script>
+
+</html>
