@@ -50,7 +50,6 @@ const loadInfoRates = () => {
 
         // If program is found, use its name, otherwise use a default value
         const programName = program ? program.nombre : "Program not found";
-
         // create new row
         const row = document.createElement("tr");
         row.classList.add("table-primary");

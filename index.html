@@ -28,11 +28,12 @@
             <button class="btnClose" id="btnClose"><i class='bx bx-x bx-tada'></i></button>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="departaments.html">Departaments</a></li>
-                <li><a href="periods.html">Periods</a></li>
-                <li><a href="rates.html">Rates</a></li>
-                <li><a href="classrooms.html">Classrooms</a></li>
-                <li><a href="programs.html">Programs</a></li>
+                <li><a href="departaments.html">Departamentos</a></li>
+                <li><a href="periods.html">Periodos</a></li>
+                <li><a href="rates.html">Tarifas</a></li>
+                <li><a href="courses.html">Cursos</a></li>
+                <li><a href="classrooms.html">Salones</a></li>
+                <li><a href="programs.html">Programas</a></li>
             </ul>
         </nav>
     </header>
@@ -57,28 +58,169 @@
     </section>
 
     <!-- begin -->
-    <section id="begin">
+    <section class="container mt-5 text-center" id="begin">
+        <h1>Inscribete</h1>
+        <br>
+        <p>
+            Proveemos tutorias de alta calidad, donde cada paso es un baño de sabiduría,
+            ¿Qué esperas para registrarte? más abajo encontrarás información adicional
+            sobre los pasos que debes tomar para adentrarte a este gran viaje.
+        </p>
+
+        <div class="container text-center">
+            <hr>
+            <span id="cita" class="text-center">
+                - Aprende el silencio. Con la quietud serena de una mente meditativa, escucha, absorbe, transcribe y
+                transforma. <br> Pitágoras
+            </span>
+            <hr>
+        </div>
 
     </section>
 
     <!-- Student -->
-    <section id="student">
+    <section class="container mt-5 mb-5" id="student">
+        <div id="form-student" class="container border rounded text-center ">
+            <h1>Estudiantes</h1>
+
+            <div class="container">
+                <form>
+
+                    <!-- name -->
+                    <div class="mb-3 row">
+                        <label for="inputName" class="col-4 col-form-label">Nombre</label>
+                        <div class="col-8">
+                            <input type="text" class="form-control" id="inputName" placeholder="Alhan"
+                                required />
+                        </div>
+                    </div>
+
+                    <!-- last Name -->
+                    <div class="mb-3 row">
+                        <label for="inputLastName" class="col-4 col-form-label">Apellidos</label>
+                        <div class="col-8">
+                            <input type="text" class="form-control" id="inputLastName"
+                                placeholder="Brito Delgado " required />
+                        </div>
+                    </div>
+
+                    <!-- Document type -->
+                    <div class="mb-3 row">
+                        <label for="inputTypeDocument" class="col-4 col-form-label">Tipo de documento</label>
+                        <div class="col-8">
+                                <select class="form-select" id="inputTypeDocument" required>
+                                    <option selected>Seleccionar</option>
+                                    <option value="1">C.C</option>
+                                    <option value="2">C.E</option>
+                                    <option value="3">N.P</option>
+                                    <option value="4">T.I</option>
+                                </select>
+                        </div>
+                    </div>
+
+                    <!-- Document Number -->
+                    <div class="mb-3 row">
+                        <label for="inputDocumentNumber" class="col-4 col-form-label">Número Documento</label>
+                        <div class="col-8">
+                            <input type="number" class="form-control" id="inputDocumentNumber" placeholder="1234356602"
+                                maxlength="10" required />
+                        </div>
+                    </div>
+                    
+                    <!-- Residence City -->
+                    <div class="mb-3 row">
+                        <label for="inputResidenCity" class="col-4 col-form-label">Ciudad Residencia</label>
+                        <div class="col-8"> 
+                            <input type="text" class="form-control" id="inputResidenCity"
+                                placeholder="Campus City" required />
+                        </div>
+                    </div>
+
+                    <!-- Adress -->
+                    <div class="mb-3 row">
+                        <label for="inputAdress" class="col-4 col-form-label">Dirección</label>
+                        <div class="col-8">
+                            <input type="text" class="form-control" id="inputAdress"
+                                placeholder="Cra. 18 #1-2 Barrio El Churco" required />
+                        </div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="mb-3 row">
+                        <label for="inputPhoneNumber" class="col-4 col-form-label">Número Telefónico</label>
+                        <div class="col-8"> 
+                            <input type="text" class="form-control" id="inputPhoneNumber"
+                                placeholder="3104567894" required />
+                        </div>
+                    </div>
+
+                    <!-- Birth Date -->
+                    <div class="mb-3 row">
+                        <label for="inputBirthDate" class="col-4 col-form-label">Fecha de nacimiento</label>
+                        <div class="col-8"> 
+                            <input type="date" class="form-control" id="inputBirthDate"
+                                placeholder="Campus City" required />
+                        </div>
+                    </div>
+
+                    <!-- Genre -->
+                    <div class="mb-3 row">
+                        <label for="inputGenre" class="col-4 col-form-label">Género</label>
+                        <div class="col-8">
+                                <select class="form-select" id="inputGenre" required>
+                                    <option selected>Seleccionar</option>
+                                    <option value="1">Masculino</option>
+                                    <option value="2">Femenino</option>
+                                </select>
+                        </div>
+                    </div>
+
+                    <!-- Genre -->
+                    <div class="mb-3 row">
+                        <label for="inputGenre" class="col-4 col-form-label">Programa</label>
+                        <div class="col-8">
+                                <select class="form-select" id="inputGenre" required>
+                                    <option selected>Seleccionar</option>
+                                    
+                                </select>
+                        </div>
+                    </div>
+
+                    <fieldset class="mb-3 row">
+                        <legend class="col-form-legend col-4">
+                            Group name
+                        </legend>
+                        <div class="col-8">
+                            you can use radio and checkboxes here
+                        </div>
+                    </fieldset>
+                    <div class="mb-3 row">
+                        <div class="offset-sm-4 col-sm-8">
+                            <button type="submit" class="btn btn-primary">
+                                Action
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
 
     </section>
 
     <!-- Teacher -->
     <section id="teacher">
-        
+
     </section>
 
     <!-- Asignatura -->
-    <section id="asignatura">
-        
+    <section id="subject">
+
     </section>
 
     <!-- matricula -->
-    <section id="student">
-        
+    <section id="tuition">
+
     </section>
 
 
