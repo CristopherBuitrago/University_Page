@@ -79,130 +79,13 @@
     </section>
 
     <!-- Student -->
-    <section class="container mt-5 mb-5" id="student">
-        <div id="form-student" class="container border rounded text-center ">
+    <section class="container mt-5 mb-5" id="student-form">
+        <div id="form-student" class="container border rounded text-center p-5">
             <h1>Estudiantes</h1>
 
-            <div class="container">
-                <form>
+            <hr>
 
-                    <!-- name -->
-                    <div class="mb-3 row">
-                        <label for="inputName" class="col-4 col-form-label">Nombre</label>
-                        <div class="col-8">
-                            <input type="text" class="form-control" id="inputName" placeholder="Alhan"
-                                required />
-                        </div>
-                    </div>
-
-                    <!-- last Name -->
-                    <div class="mb-3 row">
-                        <label for="inputLastName" class="col-4 col-form-label">Apellidos</label>
-                        <div class="col-8">
-                            <input type="text" class="form-control" id="inputLastName"
-                                placeholder="Brito Delgado " required />
-                        </div>
-                    </div>
-
-                    <!-- Document type -->
-                    <div class="mb-3 row">
-                        <label for="inputTypeDocument" class="col-4 col-form-label">Tipo de documento</label>
-                        <div class="col-8">
-                                <select class="form-select" id="inputTypeDocument" required>
-                                    <option selected>Seleccionar</option>
-                                    <option value="1">C.C</option>
-                                    <option value="2">C.E</option>
-                                    <option value="3">N.P</option>
-                                    <option value="4">T.I</option>
-                                </select>
-                        </div>
-                    </div>
-
-                    <!-- Document Number -->
-                    <div class="mb-3 row">
-                        <label for="inputDocumentNumber" class="col-4 col-form-label">Número Documento</label>
-                        <div class="col-8">
-                            <input type="number" class="form-control" id="inputDocumentNumber" placeholder="1234356602"
-                                maxlength="10" required />
-                        </div>
-                    </div>
-                    
-                    <!-- Residence City -->
-                    <div class="mb-3 row">
-                        <label for="inputResidenCity" class="col-4 col-form-label">Ciudad Residencia</label>
-                        <div class="col-8"> 
-                            <input type="text" class="form-control" id="inputResidenCity"
-                                placeholder="Campus City" required />
-                        </div>
-                    </div>
-
-                    <!-- Adress -->
-                    <div class="mb-3 row">
-                        <label for="inputAdress" class="col-4 col-form-label">Dirección</label>
-                        <div class="col-8">
-                            <input type="text" class="form-control" id="inputAdress"
-                                placeholder="Cra. 18 #1-2 Barrio El Churco" required />
-                        </div>
-                    </div>
-
-                    <!-- Phone -->
-                    <div class="mb-3 row">
-                        <label for="inputPhoneNumber" class="col-4 col-form-label">Número Telefónico</label>
-                        <div class="col-8"> 
-                            <input type="text" class="form-control" id="inputPhoneNumber"
-                                placeholder="3104567894" required />
-                        </div>
-                    </div>
-
-                    <!-- Birth Date -->
-                    <div class="mb-3 row">
-                        <label for="inputBirthDate" class="col-4 col-form-label">Fecha de nacimiento</label>
-                        <div class="col-8"> 
-                            <input type="date" class="form-control" id="inputBirthDate"
-                                placeholder="Campus City" required />
-                        </div>
-                    </div>
-
-                    <!-- Genre -->
-                    <div class="mb-3 row">
-                        <label for="inputGenre" class="col-4 col-form-label">Género</label>
-                        <div class="col-8">
-                                <select class="form-select" id="inputGenre" required>
-                                    <option selected>Seleccionar</option>
-                                    <option value="1">Masculino</option>
-                                    <option value="2">Femenino</option>
-                                </select>
-                        </div>
-                    </div>
-
-                    <!-- Genre -->
-                    <div class="mb-3 row">
-                        <label for="inputGenre" class="col-4 col-form-label">Programa</label>
-                        <div class="col-8">
-                                <select class="form-select" id="inputGenre" required>
-                                    <option selected>Seleccionar</option>
-                                    
-                                </select>
-                        </div>
-                    </div>
-
-                    <fieldset class="mb-3 row">
-                        <legend class="col-form-legend col-4">
-                            Group name
-                        </legend>
-                        <div class="col-8">
-                            you can use radio and checkboxes here
-                        </div>
-                    </fieldset>
-                    <div class="mb-3 row">
-                        <div class="offset-sm-4 col-sm-8">
-                            <button type="submit" class="btn btn-primary">
-                                Action
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+            <div class="container" id="students-form"></div>
 
         </div>
 
@@ -226,5 +109,7 @@
 
     <!-- Js -->
     <script src="js/nav.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/students.js"></script>
 
 </html>
