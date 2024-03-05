@@ -1,5 +1,5 @@
 const studentsList = [];
-
+const programsList = [];
 
 const loadStudents = async () => {
 
@@ -15,6 +15,24 @@ const loadStudents = async () => {
 
     } catch (error) {
         console.error("Error al cargar estudiantes", error.message);
+    }
+}
+
+const loadPrograms = async () => {
+
+    try {
+        programsList.length = 0;
+        const response = await fetch('http://localhost:3000/programas');
+
+        if (!response.ok) {
+            throw new Error('Error al cargar programas. Estado: ', response.status);
+        }
+        const programs = await response.json();
+        programsList.push(...programs);
+        console.log(programsList)
+
+    } catch (error) {
+        console.error("Error al cargar programas", error.message);
     }
 }
 
@@ -69,10 +87,10 @@ const loadStudentsForm = () => {
             <div class="col-8">
                 <select class="form-select" id="studentDocumentType" required>
                     <option selected>Seleccionar</option>
-                    <option value="1">C.C</option>
-                    <option value="2">C.E</option>
-                    <option value="3">N.P</option>
-                    <option value="4">T.I</option>
+                    <option value="C.C">C.C</option>
+                    <option value="C.E">C.E</option>
+                    <option value="N.P">N.P</option>
+                    <option value="T.I">T.I</option>
                 </select>
             </div>
         </div>
@@ -128,8 +146,8 @@ const loadStudentsForm = () => {
             <div class="col-8">
                 <select class="form-select" id="studentGenre" required>
                     <option selected>Seleccionar</option>
-                    <option value="1">Masculino</option>
-                    <option value="2">Femenino</option>
+                    <option value="Maculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
                 </select>
             </div>
         </div>
@@ -140,6 +158,7 @@ const loadStudentsForm = () => {
             <div class="col-8">
                 <select class="form-select" id="studentProgram" required>
                     <option selected>Seleccionar</option>
+                    ${generatePrograms()}
                 </select>
             </div>
         </div>
@@ -154,21 +173,21 @@ const loadStudentsForm = () => {
 }
 
 const createStudent = async () => {
-    const nameInput = document.getElementById('studentName');
-    const lastNameInput = document.getElementById('studentLastName');
-    const docInput = document.getElementById('studentDocumentType');
-    const docNumbInput = document.getElementById('studentDocumentNumber');
-    const studCityInput = document.getElementById('studentResidenCity');
-    const studAdressInput = document.getElementById('studentAdress');
-    const studNumbInput = document.getElementById('studentPhoneNumber');
-    const studBirthInput = document.getElementById('studentBirthDate');
-    const studGenreInput = document.getElementById('studentGenre');
-    const studProgramInput = document.getElementById('studentProgram');
+    let nameInput = document.getElementById('studentName');
+    let lastNameInput = document.getElementById('studentLastName');
+    let docInput = document.getElementById('studentDocumentType');
+    let docNumbInput = document.getElementById('studentDocumentNumber');
+    let studCityInput = document.getElementById('studentResidenCity');
+    let studAdressInput = document.getElementById('studentAdress');
+    let studNumbInput = document.getElementById('studentPhoneNumber');
+    let studBirthInput = document.getElementById('studentBirthDate');
+    let studGenreInput = document.getElementById('studentGenre');
+    let studProgramInput = document.getElementById('studentProgram');
 
     const name = nameInput.value;
     const lastName = lastNameInput.value;
-    const documenType = docInput.value;
-    const documentNumber = docNumbInput.value;
+    const docType = docInput.value;
+    const docNumb= docNumbInput.value;
     const studCity = studCityInput.value;
     const studAdress = studAdressInput.value;
     const studNumb = studNumbInput.value;
@@ -178,22 +197,36 @@ const createStudent = async () => {
 
     const newStudent = {
         id: studentsList.length + 1,
-        name: name,
-        age: age,
-        email: email
+        nombre: name,
+        apellido: lastName,
+        tipo_documento: docType,
+        numero_documento: docNumb,
+        ciudad_residencia: studCity,
+        direccion: studAdress,
+        telefono: studNumb,
+        fecha_nacimiento: studBirth,
+        sexo: studGenre,
+        programa_id: studProgram,
     }
 
 
     await saveStudent(newStudent);
     await loadStudents();
 
-    nameInput.value = '';
-    ageInput.value = '';
-    emailInput.value = '';
+    nameInput= "";
+    lastNameInput= "";
+    docInput= "";
+    docNumbInput= "";
+    studCityInput= "";
+    studAdressInput= "";
+    studNumbInput= "";
+    studBirthInput= "";
+    studGenreInput= "";
+    studProgramInput= "";
 
     alert('estudiante creado con éxito!');
 
-    actulizarClientesEnFacturas();
+    //actulizarClientesEnFacturas();
 
     return newStudent;
 
@@ -209,9 +242,9 @@ const showList = async () => {
 
     const ul = document.createElement('ul');
 
-    for (const cliente of studentsList) {
+    for (const student of studentsList) {
         const li = document.createElement('li');
-        li.textContent = `ID: ${cliente.id}, Nombre: ${cliente.name}, Edad: ${cliente.age}, Email: ${cliente.email}`;
+        li.textContent = `ID: ${student.id}, Nombre: ${student.nombre}, Apellido: ${student.apellido}, Programa: ${student.programa_id}`;
         ul.appendChild(li);
     }
 
@@ -233,3 +266,7 @@ const volverFormulario = () => {
     studentForm.style.display = 'block';
 
 }
+
+const generatePrograms = () => {
+
+}   
