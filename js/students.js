@@ -49,22 +49,64 @@ const saveStudent = async (newStudent) => {
 
 // Función para crear un nuevo estudiante
 const createStudent = async () => {
-    // Obtiene los valores de los campos del formulario y los asigna a un objeto nuevoEstudiante
-    const inputs = ['studentName', 'studentLastName', 'studentDocumentType', 'studentDocumentNumber', 'studentResidenCity', 'studentAdress', 'studentPhoneNumber', 'studentBirthDate', 'studentGenre', 'studentProgram'];
-    const newStudent = Object.fromEntries(inputs.map(id => [id, document.getElementById(id).value]));
+    let nameInput = document.getElementById('studentName');
+    let lastNameInput = document.getElementById('studentLastName');
+    let docInput = document.getElementById('studentDocumentType');
+    let docNumbInput = document.getElementById('studentDocumentNumber');
+    let studCityInput = document.getElementById('studentResidenCity');
+    let studAdressInput = document.getElementById('studentAdress');
+    let studNumbInput = document.getElementById('studentPhoneNumber');
+    let studBirthInput = document.getElementById('studentBirthDate');
+    let studGenreInput = document.getElementById('studentGenre');
+    let studProgramInput = document.getElementById('studentProgram');
 
-    // Asigna un ID al nuevo estudiante y lo guarda
-    newStudent.id = studentsList.length + 1;
+    const name = nameInput.value;
+    const lastName = lastNameInput.value;
+    const docType = docInput.value;
+    const docNumb = docNumbInput.value;
+    const studCity = studCityInput.value;
+    const studAdress = studAdressInput.value;
+    const studNumb = studNumbInput.value;
+    const studBirth = studBirthInput.value;
+    const studGenre = studGenreInput.value;
+    const studProgram = studProgramInput.value;
+
+    const newStudent = {
+        id: studentsList.length + 1,
+        nombre: name,
+        apellido: lastName,
+        tipo_documento: docType,
+        numero_documento: docNumb,
+        ciudad_residencia: studCity,
+        direccion: studAdress,
+        telefono: studNumb,
+        fecha_nacimiento: studBirth,
+        sexo: studGenre,
+        programa_id: studProgram,
+    }
+
+
     await saveStudent(newStudent);
     await loadStudents();
 
-    // Limpia los campos del formulario después de crear el estudiante
-    inputs.forEach(id => document.getElementById(id).value = '');
+    nameInput = "";
+    lastNameInput = "";
+    docInput = "";
+    docNumbInput = "";
+    studCityInput = "";
+    studAdressInput = "";
+    studNumbInput = "";
+    studBirthInput = "";
+    studGenreInput = "";
+    studProgramInput = "";
 
-    // Muestra una alerta de éxito
-    alert('¡Estudiante creado con éxito!');
+    alert('estudiante creado con éxito!');
+
+    //actulizarClientesEnFacturas();
+
     return newStudent;
-};
+
+}
 
 // Función para crear una celda de tabla con contenido dado
 const createCell = (content) => {
@@ -78,7 +120,7 @@ const showList = async () => {
     await loadStudents();
     const studentForm = document.getElementById('students-form');
     const studentsListed = document.getElementById('students-list');
-    
+
     // Oculta el formulario y muestra la lista de estudiantes
     studentForm.style.display = 'none';
     studentsListed.style.display = 'block';
@@ -139,10 +181,10 @@ const generatePrograms = () => {
 const loadStudentsForm = () => {
     const studentForm = document.getElementById('students-form');
     const studentsListed = document.getElementById('students-list');
-    
+
     // Oculta la lista de estudiantes al cargar el formulario
     studentsListed.style.display = 'none';
-
+    
     // Crea el formulario
     studentForm.innerHTML = `
         <form>
