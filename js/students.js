@@ -18,7 +18,6 @@ const loadStudents = async () => {
     }
 }
 
-
 const saveStudent = async (newStudent) => {
     try {
 
@@ -49,24 +48,26 @@ const loadStudentsForm = () => {
         <form>
         <!-- name -->
         <div class="mb-3 row">
-            <label for="inputName" class="col-4 col-form-label">Nombre</label>
+            <label for="studentName" class="col-4 col-form-label">Nombre</label>
             <div class="col-8">
-                <input type="text" class="form-control" id="inputName" placeholder="Alhan" required />
+                <input type="text" class="form-control" id="studentName" placeholder="Alhan" required />
             </div>
         </div>
+
         <!-- last Name -->
         <div class="mb-3 row">
-            <label for="inputLastName" class="col-4 col-form-label">Apellidos</label>
+            <label for="studentLastName" class="col-4 col-form-label">Apellidos</label>
             <div class="col-8">
-                <input type="text" class="form-control" id="inputLastName" placeholder="Brito Delgado "
+                <input type="text" class="form-control" id="studentLastName" placeholder="Brito Delgado "
                     required />
             </div>
         </div>
+
         <!-- Document type -->
         <div class="mb-3 row">
-            <label for="inputTypeDocument" class="col-4 col-form-label">Tipo de documento</label>
+            <label for="studentDocumentType" class="col-4 col-form-label">Tipo de documento</label>
             <div class="col-8">
-                <select class="form-select" id="inputTypeDocument" required>
+                <select class="form-select" id="studentDocumentType" required>
                     <option selected>Seleccionar</option>
                     <option value="1">C.C</option>
                     <option value="2">C.E</option>
@@ -75,62 +76,69 @@ const loadStudentsForm = () => {
                 </select>
             </div>
         </div>
+
         <!-- Document Number -->
         <div class="mb-3 row">
-            <label for="inputDocumentNumber" class="col-4 col-form-label">Número Documento</label>
+            <label for="studentDocumentNumber" class="col-4 col-form-label">Número Documento</label>
             <div class="col-8">
-                <input type="number" class="form-control" id="inputDocumentNumber" placeholder="1234356602"
+                <input type="number" class="form-control" id="studentDocumentNumber" placeholder="1234356602"
                     maxlength="10" required />
             </div>
         </div>
+
         <!-- Residence City -->
         <div class="mb-3 row">
-            <label for="inputResidenCity" class="col-4 col-form-label">Ciudad Residencia</label>
+            <label for="studentResidenCity" class="col-4 col-form-label">Ciudad Residencia</label>
             <div class="col-8">
-                <input type="text" class="form-control" id="inputResidenCity" placeholder="Campus City"
+                <input type="text" class="form-control" id="studentResidenCity" placeholder="Campus City"
                     required />
             </div>
         </div>
+
         <!-- Adress -->
         <div class="mb-3 row">
-            <label for="inputAdress" class="col-4 col-form-label">Dirección</label>
+            <label for="studentAdress" class="col-4 col-form-label">Dirección</label>
             <div class="col-8">
-                <input type="text" class="form-control" id="inputAdress"
+                <input type="text" class="form-control" id="studentAdress"
                     placeholder="Cra. 18 #1-2 Barrio El Churco" required />
             </div>
         </div>
+
         <!-- Phone -->
         <div class="mb-3 row">
-            <label for="inputPhoneNumber" class="col-4 col-form-label">Número Telefónico</label>
+            <label for="studentPhoneNumber" class="col-4 col-form-label">Número Telefónico</label>
             <div class="col-8">
-                <input type="text" class="form-control" id="inputPhoneNumber" placeholder="3104567894"
+                <input type="text" class="form-control" id="studentPhoneNumber" placeholder="3104567894"
                     required />
             </div>
         </div>
+
         <!-- Birth Date -->
         <div class="mb-3 row">
-            <label for="inputBirthDate" class="col-4 col-form-label">Fecha de nacimiento</label>
+            <label for="studentBirthDate" class="col-4 col-form-label">Fecha de nacimiento</label>
             <div class="col-8">
-                <input type="date" class="form-control" id="inputBirthDate" placeholder="Campus City"
+                <input type="date" class="form-control" id="studentBirthDate" placeholder="Campus City"
                     required />
             </div>
         </div>
+
         <!-- Genre -->
         <div class="mb-3 row">
-            <label for="inputGenre" class="col-4 col-form-label">Género</label>
+            <label for="studentGenre" class="col-4 col-form-label">Género</label>
             <div class="col-8">
-                <select class="form-select" id="inputGenre" required>
+                <select class="form-select" id="studentGenre" required>
                     <option selected>Seleccionar</option>
                     <option value="1">Masculino</option>
                     <option value="2">Femenino</option>
                 </select>
             </div>
         </div>
-        <!-- Genre -->
+
+        <!-- Program -->
         <div class="mb-3 row">
-            <label for="inputGenre" class="col-4 col-form-label">Programa</label>
+            <label for="studentProgram" class="col-4 col-form-label">Programa</label>
             <div class="col-8">
-                <select class="form-select" id="inputGenre" required>
+                <select class="form-select" id="studentProgram" required>
                     <option selected>Seleccionar</option>
                 </select>
             </div>
@@ -147,12 +155,26 @@ const loadStudentsForm = () => {
 
 const createStudent = async () => {
     const nameInput = document.getElementById('studentName');
-    const ageInput = document.getElementById('studentAge');
-    const emailInput = document.getElementById('studentEmail');
+    const lastNameInput = document.getElementById('studentLastName');
+    const docInput = document.getElementById('studentDocumentType');
+    const docNumbInput = document.getElementById('studentDocumentNumber');
+    const studCityInput = document.getElementById('studentResidenCity');
+    const studAdressInput = document.getElementById('studentAdress');
+    const studNumbInput = document.getElementById('studentPhoneNumber');
+    const studBirthInput = document.getElementById('studentBirthDate');
+    const studGenreInput = document.getElementById('studentGenre');
+    const studProgramInput = document.getElementById('studentProgram');
 
     const name = nameInput.value;
-    const age = ageInput.value;
-    const email = emailInput.value;
+    const lastName = lastNameInput.value;
+    const documenType = docInput.value;
+    const documentNumber = docNumbInput.value;
+    const studCity = studCityInput.value;
+    const studAdress = studAdressInput.value;
+    const studNumb = studNumbInput.value;
+    const studBirth = studBirthInput.value;
+    const studGenre = studGenreInput.value;
+    const studProgram = studProgramInput.value;
 
     const newStudent = {
         id: studentsList.length + 1,
@@ -211,5 +233,3 @@ const volverFormulario = () => {
     studentForm.style.display = 'block';
 
 }
-
-console.log(studentsList);
