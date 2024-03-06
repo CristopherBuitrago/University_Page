@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded',async ()=>{
     await loadSubjects();
     await loadPeriods();
     await loadCourses();
+    await loadClassrooms();
 
     loadStudentsForm();
 

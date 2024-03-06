@@ -2,6 +2,7 @@
 const subjectArray = [];
 const periodsArray = [];
 const coursesArray = [];
+const classroomsArray = [];
 
 // Función para cargar datos desde una URL a una lista específica
 const fetchDataSubjects = async (url, list) => {
@@ -33,10 +34,25 @@ const loadCourses = async () => {
     await fetchDataSubjects('http://localhost:3000/cursos', coursesArray);
 };
 
+const loadClassrooms = async () => {
+    await fetchDataSubjects('http://localhost:3000/salones', classroomsArray);
+};
 
 // Función para generar las opciones del menú desplegable de programas
 const generatePeriods = () => {
     return periodsArray.map(period => `<option>${period.codigo}</option>`).join('');
+};
+
+const generateCourses = () => {
+    return coursesArray.map(course => `<option>${course.nombre}</option>`).join('');
+};
+
+const generateTeachers = () => {
+    return teachersList.map( teacher => `<option>${teacher.nombre}</option>`).join('');
+};
+
+const generateClassRooms = () => {
+    return classroomsArray.map( classroom => `<option>${classroom.numero_identificacion}</option>`).join('');
 };
 
 // Función para cargar el formulario al cargar la página
@@ -73,37 +89,154 @@ const loadSubjectsForm = () => {
 
         <!-- cursos -->
         <div class="mb-3 row">
-            <div class="form-group">
-            <label for="input-datalist">Timezone</label>
-            <input type="text" class="form-control" placeholder="Timezone" list="list-timezone" id="input-datalist">
-            <datalist id="list-timezone">
-                <option>Asia/Aden</option>
-                <option>Asia/Aqtau</option>
-                <option>Asia/Baghdad</option>
-                <option>Asia/Barnaul</option>
-                <option>Asia/Chita</option>
-                <option>Asia/Dhaka</option>
-                <option>Asia/Famagusta</option>
-                <option>Asia/Hong_Kong</option>
-                <option>Asia/Jayapura</option>
-                <option>Asia/Kuala_Lumpur</option>
-                <option>Asia/Jakarta</option>
-            </datalist>
+            <label for="courses" class="col-4 col-form-label">Cursos</label>
+            <div class="col-8">
+                <select class="form-select" id="courses" required>
+                    <option selected>Seleccionar</option>
+                    ${generateCourses()}
+                </select>
+            </div>
         </div>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', e => {
-            $('#input-datalist').autocomplete()
-        }, false);
-    </script>
+
+        <!-- creditos -->
+        <div class="mb-3 row">
+            <label for="credits" class="col-4 col-form-label">Creditos</label>
+            <div class="col-8">
+                <input type="Number" class="form-control" id="credits" placeholder="Example: 4..." required>
+            </div>
+        </div>
+
+        <!-- profesor -->
+        <div class="mb-3 row">
+            <label for="teachers" class="col-4 col-form-label">Profesores</label>
+            <div class="col-8">
+                <select class="form-select" id="teachers" required>
+                    <option selected>Seleccionar</option>
+                    ${generateTeachers()}
+                </select>
+            </div>
+        </div>
+
+        <!-- programas -->
+        <div class="mb-3 row">
+            <label for="programs" class="col-4 col-form-label">Programas</label>
+            <div class="col-8">
+                <select class="form-select" id="programs" required>
+                    <option selected>Seleccionar</option>
+                    ${generatePrograms()}
+                </select>
+            </div>
+        </div>
+
+        <!-- Construcción de Horario -->
+        <div class="form-group" id="horario">
+        <label>Horario de Clases:</label>
+        <div class="row">
+            <div class="col-md-3">
+            <label for="dia">Día:</label>
+            <select class="form-control" id="dia">
+                <option value="Lunes">Lunes</option>
+                <option value="Martes">Martes</option>
+                <option value="Miércoles">Miércoles</option>
+                <option value="Jueves">Jueves</option>
+                <option value="Viernes">Viernes</option>
+                <option value="Sábado">Sábado</option>
+                <option value="Domingo">Domingo</option>
+            </select>
+            </div>
+            <div class="col-md-3">
+                <label for="hora_inicio">Hora de Inicio:</label>
+                <input type="time" class="form-control" id="hora_inicio">
+            </div>
+            <div class="col-md-3">
+                <label for="hora_fin">Hora de Fin:</label>
+                <input type="time" class="form-control" id="hora_fin">
+            </div>
+            <div class="col-md-3">
+                <label for="salon">Salón:</label>
+                <select class="form-select" id="salon">
+                    ${generateClassRooms()}
+                </select>
+            </div>
+        </div>
+        <button type="button" class="btn btn-success mt-3" id="agregarSesion" onclick="createSubject()">Agregar Asignatura</button>
+        <button class="btn btn-danger mt-3" type="button" onclick="showListSubjects()">Ver asignaturas</button>
+        </div>
+
         </div>
         </div>
 
-            <button class="btn btn-danger" class="col-2 col-form-label" type="button" onclick="showList()">Ver Listado de estudiantes</button>
-            <button class="btn btn-primary" class="col-6 col-form-label" type="button" onclick="createStudent()">Crear Estudiante</button>
-            
         </form>
     `;
 };
 
+// Funcion para guardar una asignatura
+// Función para guardar un nuevo estudiante
+const saveSubject = async (newSubject) => {
+    try {
+        const response = await fetch('http://localhost:3000/asignaturas', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newSubject),
+        });
 
+        if (!response.ok) {
+            throw new Error(`Error al crear la asignatura. Estado: ${response.status}`);
+        }
+        const subjectCreated = await response.json();
+        console.log('asignatura creada:', subjectCreated);
+    } catch (error) {
+        console.error(`Error al crear la asignatura: ${error.message}`);
+    }
+};
+
+// Función para crear asignatura
+const createSubject = async () => {
+    let period = document.getElementById('period').value;
+    let course = document.getElementById('courses').value;
+    let credit = document.getElementById('credits').value;
+    let teacher = document.getElementById('teachers').value;
+    let program = document.getElementById('programs').value;
+    let day = document.getElementById('dia').value;
+    let begin = document.getElementById('hora_inicio').value;
+    let end = document.getElementById('hora_fin').value;
+    let classRoom = document.getElementById('salon').value;
+
+    const scheedule = {
+        dia: day,
+        hora_inicio: begin,
+        hora_fin: end,
+        salon_id: classRoom
+    }
+
+    const newSubject = {
+        id: subjectArray.length + 1,
+        curso_id: course,
+        codigo: `${course.codigo}-${period.codigo}`,
+        creditos: credit,
+        profesor_id: teacher,
+        cupos_disponibles: 20,
+        programa_id: program,
+        horario_clases: [scheedule],
+    }
+
+    await saveSubject(newSubject);
+    await loadSubjects();
+
+    // Restablecer los valores de los elementos del formulario
+    document.getElementById('period').value = "";
+    document.getElementById('courses').value = "";
+    document.getElementById('credits').value = "";
+    document.getElementById('teachers').value = "";
+    document.getElementById('programs').value = "";
+    document.getElementById('dia').value = "";
+    document.getElementById('hora_inicio').value = "";
+    document.getElementById('hora_fin').value = "";
+    document.getElementById('salon').value = "";
+
+    alert('¡Asignatura creada con éxito!');
+    console.log(newSubject);
+    return newSubject;
+}

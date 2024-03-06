@@ -48,65 +48,65 @@ const saveStudent = async (newStudent) => {
 };
 
 // Función para crear un nuevo estudiante
-const createStudent = async () => {
-    let nameInput = document.getElementById('studentName');
-    let lastNameInput = document.getElementById('studentLastName');
-    let docInput = document.getElementById('studentDocumentType');
-    let docNumbInput = document.getElementById('studentDocumentNumber');
-    let studCityInput = document.getElementById('studentResidenCity');
-    let studAdressInput = document.getElementById('studentAdress');
-    let studNumbInput = document.getElementById('studentPhoneNumber');
-    let studBirthInput = document.getElementById('studentBirthDate');
-    let studGenreInput = document.getElementById('studentGenre');
-    let studProgramInput = document.getElementById('studentProgram');
+    const createStudent = async () => {
+        let nameInput = document.getElementById('studentName');
+        let lastNameInput = document.getElementById('studentLastName');
+        let docInput = document.getElementById('studentDocumentType');
+        let docNumbInput = document.getElementById('studentDocumentNumber');
+        let studCityInput = document.getElementById('studentResidenCity');
+        let studAdressInput = document.getElementById('studentAdress');
+        let studNumbInput = document.getElementById('studentPhoneNumber');
+        let studBirthInput = document.getElementById('studentBirthDate');
+        let studGenreInput = document.getElementById('studentGenre');
+        let studProgramInput = document.getElementById('studentProgram');
 
-    const name = nameInput.value;
-    const lastName = lastNameInput.value;
-    const docType = docInput.value;
-    const docNumb = docNumbInput.value;
-    const studCity = studCityInput.value;
-    const studAdress = studAdressInput.value;
-    const studNumb = studNumbInput.value;
-    const studBirth = studBirthInput.value;
-    const studGenre = studGenreInput.value;
-    const studProgram = studProgramInput.value;
+        const name = nameInput.value;
+        const lastName = lastNameInput.value;
+        const docType = docInput.value;
+        const docNumb = docNumbInput.value;
+        const studCity = studCityInput.value;
+        const studAdress = studAdressInput.value;
+        const studNumb = studNumbInput.value;
+        const studBirth = studBirthInput.value;
+        const studGenre = studGenreInput.value;
+        const studProgram = studProgramInput.value;
 
-    const newStudent = {
-        id: studentsList.length + 1,
-        nombre: name,
-        apellido: lastName,
-        tipo_documento: docType,
-        numero_documento: docNumb,
-        ciudad_residencia: studCity,
-        direccion: studAdress,
-        telefono: studNumb,
-        fecha_nacimiento: studBirth,
-        sexo: studGenre,
-        programa_id: studProgram,
+        const newStudent = {
+            id: studentsList.length + 1,
+            nombre: name,
+            apellido: lastName,
+            tipo_documento: docType,
+            numero_documento: docNumb,
+            ciudad_residencia: studCity,
+            direccion: studAdress,
+            telefono: studNumb,
+            fecha_nacimiento: studBirth,
+            sexo: studGenre,
+            programa_id: studProgram,
+        }
+
+
+        await saveStudent(newStudent);
+        await loadStudents();
+
+        nameInput = "";
+        lastNameInput = "";
+        docInput = "";
+        docNumbInput = "";
+        studCityInput = "";
+        studAdressInput = "";
+        studNumbInput = "";
+        studBirthInput = "";
+        studGenreInput = "";
+        studProgramInput = "";
+
+        alert('estudiante creado con éxito!');
+
+        //actulizarClientesEnFacturas();
+
+        return newStudent;
+
     }
-
-
-    await saveStudent(newStudent);
-    await loadStudents();
-
-    nameInput = "";
-    lastNameInput = "";
-    docInput = "";
-    docNumbInput = "";
-    studCityInput = "";
-    studAdressInput = "";
-    studNumbInput = "";
-    studBirthInput = "";
-    studGenreInput = "";
-    studProgramInput = "";
-
-    alert('estudiante creado con éxito!');
-
-    //actulizarClientesEnFacturas();
-
-    return newStudent;
-
-}
 
 // Función para crear una celda de tabla con contenido dado
 const createCell = (content) => {
