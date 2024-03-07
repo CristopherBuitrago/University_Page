@@ -9,69 +9,35 @@ const fetchDataSubjects = async (url, list) => {
     try {
         list.length = 0;
         const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Error al cargar datos desde ${url}. Estado: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Error al cargar datos desde ${url}. Estado: ${response.status}`);
         const data = await response.json();
         list.push(...data);
-
-        console.log(list)
     } catch (error) {
         console.error(`Error al cargar datos: ${error.message}`);
     }
 };
 
-// Funciones para cargar estudiantes y programas
-const loadSubjects = async () => {
-    await fetchDataSubjects('http://localhost:3000/asignaturas', subjectArray);
-};
-
-const loadPeriods = async () => {
-    await fetchDataSubjects('http://localhost:3000/periodos', periodsArray);
-};
-
-const loadCourses = async () => {
-    await fetchDataSubjects('http://localhost:3000/cursos', coursesArray);
-};
-
-const loadClassrooms = async () => {
-    await fetchDataSubjects('http://localhost:3000/salones', classroomsArray);
-};
+// Funciones para cargar asignaturas y programas
+const loadSubjects = async () => await fetchDataSubjects('http://localhost:3000/asignaturas', subjectArray);
+const loadPeriods = async () => await fetchDataSubjects('http://localhost:3000/periodos', periodsArray);
+const loadCourses = async () => await fetchDataSubjects('http://localhost:3000/cursos', coursesArray);
+const loadClassrooms = async () => await fetchDataSubjects('http://localhost:3000/salones', classroomsArray);
 
 // Función para generar las opciones del menú desplegable de programas
-const generatePeriods = () => {
-    return periodsArray.map(period => `<option>${period.codigo}</option>`).join('');
-};
-
-const generateCourses = () => {
-    return coursesArray.map(course => `<option>${course.nombre}</option>`).join('');
-};
-
-const generateTeachers = () => {
-    return teachersList.map( teacher => `<option>${teacher.nombre}</option>`).join('');
-};
-
-const generateClassRooms = () => {
-    return classroomsArray.map( classroom => `<option>${classroom.numero_identificacion}</option>`).join('');
-};
+const generatePeriods = () => periodsArray.map(period => `<option>${period.codigo}</option>`).join('');
+const generateCourses = () => coursesArray.map(course => `<option>${course.nombre}</option>`).join('');
+const generateClassRooms = () => classroomsArray.map(classroom => `<option>${classroom.numero_identificacion}</option>`).join('');
 
 // Función para cargar el formulario al cargar la página
 const loadSubjectsForm = () => {
     const subjectForm = document.getElementById('subjects-form');
-    const subjectsListed = document.getElementById('subjects-list');
+    const subjectsListed = document.getElementById('subject-list');
 
-    // Oculta la lista de estudiantes al cargar el formulario
+    // Oculta la lista de asignaturas al cargar el formulario
     subjectsListed.style.display = 'none';
     
     // Extraemos los nombres de los cursos
-    const coursesNames = [];
-    
-    for (let course of coursesArray) {
-        let name = course.nombre;
-        coursesNames.push(name);
-    }
-
-    console.log(`Nombre de los cursos: ${coursesNames}`)
+    const coursesNames = coursesArray.map(course => course.nombre); 
 
     // Crea el formulario
     subjectForm.innerHTML = `
@@ -103,17 +69,6 @@ const loadSubjectsForm = () => {
             <label for="credits" class="col-4 col-form-label">Creditos</label>
             <div class="col-8">
                 <input type="Number" class="form-control" id="credits" placeholder="Example: 4..." required>
-            </div>
-        </div>
-
-        <!-- profesor -->
-        <div class="mb-3 row">
-            <label for="teachers" class="col-4 col-form-label">Profesores</label>
-            <div class="col-8">
-                <select class="form-select" id="teachers" required>
-                    <option selected>Seleccionar</option>
-                    ${generateTeachers()}
-                </select>
             </div>
         </div>
 
@@ -154,37 +109,30 @@ const loadSubjectsForm = () => {
             </div>
             <div class="col-md-3">
                 <label for="salon">Salón:</label>
-                <select class="form-select" id="salon">
+                <select class="form-select" id="salon"> 
                     ${generateClassRooms()}
                 </select>
             </div>
         </div>
-        <button type="button" class="btn btn-success mt-3" id="agregarSesion" onclick="createSubject()">Agregar Asignatura</button>
-        <button class="btn btn-danger mt-3" type="button" onclick="showListSubjects()">Ver asignaturas</button>
+    
+        <button type="button" class="btn btn-danger mt-3" onclick="showListSubject()">Mostrar asignaturas</button>
+        <button type="button" class="btn btn-success mt-3" onclick="createSubject()">Agregar Asignatura</button>
+    
         </div>
-
-        </div>
-        </div>
-
         </form>
     `;
 };
 
-// Funcion para guardar una asignatura
-// Función para guardar un nuevo estudiante
+// Función para guardar una asignatura
 const saveSubject = async (newSubject) => {
     try {
         const response = await fetch('http://localhost:3000/asignaturas', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(newSubject),
         });
 
-        if (!response.ok) {
-            throw new Error(`Error al crear la asignatura. Estado: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Error al crear la asignatura. Estado: ${response.status}`);
         const subjectCreated = await response.json();
         console.log('asignatura creada:', subjectCreated);
     } catch (error) {
@@ -192,51 +140,116 @@ const saveSubject = async (newSubject) => {
     }
 };
 
-// Función para crear asignatura
-const createSubject = async () => {
-    let period = document.getElementById('period').value;
-    let course = document.getElementById('courses').value;
-    let credit = document.getElementById('credits').value;
-    let teacher = document.getElementById('teachers').value;
-    let program = document.getElementById('programs').value;
-    let day = document.getElementById('dia').value;
-    let begin = document.getElementById('hora_inicio').value;
-    let end = document.getElementById('hora_fin').value;
-    let classRoom = document.getElementById('salon').value;
+// Función para obtener el ID de una entidad
+const getId = (entity, list) => {
+    const result = list.find(element => entity === element.nombre);
+    return result ? result.id : "Id no encontrada o la lista no existe";
+}
 
-    const scheedule = {
-        dia: day,
-        hora_inicio: begin,
-        hora_fin: end,
-        salon_id: classRoom
-    }
+// Función para obtener el código de una entidad
+const getCode = (entity, list) => {
+    const result = list.find(element => entity === element.nombre);
+    return result ? result.codigo : "Codigo no encontrada o la lista no existe";
+}
+
+// Función para crear asignatura    
+const createSubject = async () => {
+    const period = document.getElementById('period').value;
+    const course = document.getElementById('courses').value;
+    const credit = document.getElementById('credits').value;
+    const teacher = document.getElementById('teachers').value;
+    const program = document.getElementById('programs').value;
+    const day = document.getElementById('dia').value;
+    const begin = document.getElementById('hora_inicio').value;
+    const end = document.getElementById('hora_fin').value;
+    const classRoom = document.getElementById('salon').value;
+
+    // Obtener el ID del periodo y del curso para encontrar el código del curso
+    const code_course = getCode(course, coursesArray);
+
+    const scheedule = {dia: day, hora_inicio: begin, hora_fin: end, salon_id: classRoom};
 
     const newSubject = {
         id: subjectArray.length + 1,
-        curso_id: course,
-        codigo: `${course.codigo}-${period.codigo}`,
+        curso_id: Number(getId(course, coursesArray)),
+        codigo: `${code_course}-${period}`,
         creditos: credit,
-        profesor_id: teacher,
+        profesor_id: Number(getId(teacher, teachersList)),
         cupos_disponibles: 20,
-        programa_id: program,
+        programa_id: Number(getId(program, programsList)),
         horario_clases: [scheedule],
-    }
+    };
 
     await saveSubject(newSubject);
     await loadSubjects();
 
     // Restablecer los valores de los elementos del formulario
-    document.getElementById('period').value = "";
-    document.getElementById('courses').value = "";
-    document.getElementById('credits').value = "";
-    document.getElementById('teachers').value = "";
-    document.getElementById('programs').value = "";
-    document.getElementById('dia').value = "";
-    document.getElementById('hora_inicio').value = "";
-    document.getElementById('hora_fin').value = "";
-    document.getElementById('salon').value = "";
+    const elements = ['period', 'courses', 'credits', 'teachers', 'programs', 'dia', 'hora_inicio', 'hora_fin', 'salon'];
+    elements.forEach(element => document.getElementById(element).value = "");
 
     alert('¡Asignatura creada con éxito!');
     console.log(newSubject);
     return newSubject;
-}
+};
+
+// Función para crear una celda de tabla con contenido dado
+const createCellSubject = (content) => {
+    const cell = document.createElement("td");
+    cell.textContent = content;
+    return cell;
+};
+
+// Función para mostrar la lista de asignaturas
+const showListSubject = async () => {
+    await loadSubjects();
+    const subjectsForm = document.getElementById('subjects-form');
+    const subjectListed = document.getElementById('subject-list');
+    
+    // Oculta el formulario y muestra la lista de asignaturas
+    subjectsForm.style.display = 'none';
+    subjectListed.style.display = 'block';
+
+    // Crea la estructura de la tabla para mostrar la lista de asignaturas
+    subjectListed.innerHTML = `
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-borderless table-primary align-middle">
+                <thead class="table-light">
+                    <caption>Asignaturas</caption>
+                    <tr>
+                        <th>ID</th>
+                        <th>Codigo</th>
+                        <th>Creditos</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider" id="info-subject"></tbody>
+            </table>
+        </div>
+    `;
+    // Llena la tabla con los datos de los asignaturas
+    subjectArray.forEach(({ id, codigo, creditos}) => {
+        const row = document.createElement("tr");
+        row.classList.add("table-primary");
+        [id, codigo, creditos].forEach(content => {
+            row.appendChild(createCellSubject(content));
+        });
+        document.getElementById("info-subject").appendChild(row);
+    });
+
+    // Agrega un botón para volver al formulario
+    const volverButton = document.createElement('button');
+    volverButton.setAttribute("class", "btn btn-danger");
+    volverButton.textContent = 'Volver al Formulario';
+    volverButton.addEventListener('click', volverFormularioSubjects);
+    subjectListed.appendChild(volverButton);
+
+};
+
+// Función para volver al formulario desde la lista de asignaturas
+const volverFormularioSubjects = () => {
+    const subjectsForm = document.getElementById('subjects-form');
+    const subjectListed = document.getElementById('subject-list');
+
+    // Oculta la lista de asignaturas y muestra el formulario
+    subjectListed.style.display = 'none';
+    subjectsForm.style.display = 'block';   
+};

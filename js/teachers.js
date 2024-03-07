@@ -220,8 +220,8 @@ const loadTeachersForm = () => {
         </div>
         <hr>
 
-            <button class="btn btn-danger" class="col-2 col-form-label" type="button" onclick="showListTeacher()">Ver Listado de maestros</button>
-            <button class="btn btn-primary" class="col-6 col-form-label" type="button" onclick="createTeacher()">Crear maestro</button>
+            <button class="btn btn-danger mt-3" type="button" onclick="showListTeacher()">Ver maestros</button>
+            <button class="btn btn-success mt-3" type="button" onclick="createTeacher()">Crear maestro</button>
             
         </form>
     `;

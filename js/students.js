@@ -288,8 +288,8 @@ const loadStudentsForm = () => {
         </div>
         <hr>
 
-            <button class="btn btn-danger" class="col-2 col-form-label" type="button" onclick="showList()">Ver Listado de estudiantes</button>
-            <button class="btn btn-primary" class="col-6 col-form-label" type="button" onclick="createStudent()">Crear Estudiante</button>
+            <button class="btn btn-danger mt-3" type="button" onclick="showList()">Ver estudiantes</button>
+            <button class="btn btn-success mt-3"  type="button" onclick="createStudent()">Crear Estudiante</button>
             
         </form>
     `;
