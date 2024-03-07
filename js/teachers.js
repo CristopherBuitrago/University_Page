@@ -82,7 +82,7 @@ const createTeacher = async () => {
 
     alert('Maestro creado con éxito!');
 
-    //actulizarClientesEnFacturas();
+    actualizateTeachersSubjects();
 
     return newTeacher;
 

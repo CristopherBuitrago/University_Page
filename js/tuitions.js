@@ -1,200 +1,277 @@
-const listaFacturas=[];
+const tuitionsArray = [];
+const ratesArray = [];
 
+const loadTuitions = async () => {
+    try {
 
-const loadFacturas= async()=>{
-    try{
+        const response = await fetch('http://localhost:3000/matriculas');
 
-        const respuesta=await fetch('http://localhost:3000/facturas');
-
-        if(!respuesta.ok){
-           throw new Error('Error al cargar clientes. Estado: ',respuesta.status);
+        if (!response.ok) {
+            throw new Error('Error al cargar matriculas. Estado: ', response.status);
         }
-        const facturas=await respuesta.json();
-        listaFacturas.push(...facturas);
+        const tuitions = await response.json();
+        tuitionsArray.push(...tuitions);
 
-    }catch(error){
-        console.error("Error al cargar clientes",error.message);
+    } catch (error) {
+        console.error("Error al cargar matriculas", error.message);
     }
 }
 
-const guardarFactura= async(nuevoFactura)=>{
-    try{
+const loadRates = async () => {
+    try {
 
-        const respuesta=await fetch('http://localhost:3000/facturas',{
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json'
+        const response = await fetch('http://localhost:3000/tarifas');
+
+        if (!response.ok) {
+            throw new Error('Error al cargar tarifas. Estado: ', response.status);
+        }
+        const rates = await response.json();
+        ratesArray.push(...rates);
+        console.log(ratesArray)
+
+    } catch (error) {
+        console.error("Error al cargar tarifas", error.message);
+    }
+}
+
+const saveTuition = async (newTuition) => {
+    try {
+
+        const response = await fetch('http://localhost:3000/matriculas', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(nuevoFactura),
+            body: JSON.stringify(newTuition),
         });
 
-        if(!respuesta.ok){
-           throw new Error('Error al crear el factura. Estado: ',respuesta.status);
+        if (!response.ok) {
+            throw new Error('Error al crear el matricula. Estado: ', response.status);
         }
-        const facturaCreado=await respuesta.json();
-        
-        console.log('Producto creado:', facturaCreado);
+        const tuitionCreated = await response.json();
 
-    }catch(error){
-        console.error("Error al cargar factura",error.message);
+        console.log('Producto creado:', tuitionCreated);
+
+    } catch (error) {
+        console.error("Error al cargar matricula", error.message);
     }
 }
 
 
 
 
-const actulizarClientesEnFacturas=()=>{
-    const clienteSelect=document.getElementById('clienteFactura');
-    clienteSelect.innerHTML='';
-    const opcionesClientes=generarOptionsClientes();
-    clienteSelect.innerHTML=opcionesClientes;
+const actualizateStudentsTuitions = () => {
+    const studentSelect = document.getElementById('studentTuition');
+    studentSelect.innerHTML = '';
+    const studentsOptions = generateStudentsOptions();
+    studentSelect.innerHTML = studentsOptions;
 }
 
-const actulizarProductosEnFacturas=()=>{
-    const productosSelect=document.getElementById('productosFactura');
-    productosSelect.innerHTML='';
-    const opcionesProductos=generarOptionsProductos();
-    productosSelect.innerHTML=opcionesProductos;
+const actualizateSubjectsTuitions = () => {
+    const subjectSelect = document.getElementById('subjectTuition');
+    subjectSelect.innerHTML = '';
+    const subjectsOptions = generateSubjectsOptions();
+    subjectSelect.innerHTML = subjectsOptions;
 }
 
-const cargarFormularioFacturas=()=>{
-    const facturasForm=document.getElementById('facturas-form');
-    facturasForm.innerHTML = `
+const loadTuitionsForm = () => {
+    const tuitionsForm = document.getElementById('tuitions-form');
+    tuitionsForm.innerHTML = `
         <form>
-            <label for="fechaFactura">Fecha de la Factura:</label>
-            <input type="date" id="fechaFactura" required>
-            
-            <label for="clienteFactura">Cliente:</label>
-            <select id="clienteFactura" required>
-                ${generarOptionsClientes()}
-            </select>
+            <div class="mb-3 row">
+                <label class="col-4 col-form-label" for="studentTuition">Estudiante:</label>
+                <div class="col-8"> 
+                    <select class="form-select" id="studentTuition" required>
+                        ${generateStudentsOptions()}
+                    </select>
+                </div>
+            </div>
 
-            <label for="productosFactura">Productos:</label>
-            <select id="productosFactura" multiple required>
-                ${generarOptionsProductos()}
-            </select>
+            <div class="mb-3 row">
+                <label class="col-4 col-form-label" for="subjectTuition">Asignatura:</label>
+                <div class="col-8"> 
+                    <select class="form-select" id="subjectTuition" required>
+                        ${generateSubjectsOptions()}
+                    </select>
+                </div>
+            </div>
+                <button class="btn btn-success mt-3" type="button" onclick="addSubject()">Agregar Asignatura</button>
+                <hr>
+                <h3>Asignaturas escogidas:</h3>
+                <hr>
+                <ul id="items-list"></ul>
 
-            <label for="cantidadProducto">Cantidad:</label>
-            <input type="number" id="cantidadProducto" required>
-
-            <button type="button" onclick="agregarItemFactura()">Agregar Item</button>
-
-            <h3>Items de la Factura:</h3>
-            <ul id="listado-items"></ul>
-
-            <button type="button" onclick="crearFactura()">Crear Factura</button>
-            <button type="button" onclick="mostrarListadoFacturas()">Ver Listado de Facturas</button>
+            <button class="btn btn-success mt-3" type="button" onclick="crearFactura()">Crear matricula</button>
+            <button class="btn btn-danger mt-3" type="button" onclick="showTuitions()">Ver matriculas</button>
         </form>
     `;
 
-    const listaFacturas=document.getElementById('listado-facturas');
-    listaFacturas.style.display='none';
+    const tuitionsList = document.getElementById('tuitions-list');
+    tuitionsList.style.display = 'none';
 
 }
 
-const generarOptionsClientes=()=>{
-    let options='';
-    for(const cliente of listaClientes){
-        options+=`<option value="${cliente.id}">${cliente.nombre}</option>`;
+const generateStudentsOptions = () => {
+    let options = '';
+    for (const student of studentsList) {
+        options += `<option value="${student.id}">${student.nombre}</option>`;
     }
     return options;
 
 }
 
-const generarOptionsProductos=()=>{
-    let options='';
-    for(const producto of listaProductos){
-        options+=`<option value="${producto.codigo}">${producto.descripcion}</option>`;
+const generateSubjectsOptions = () => {
+    let options = '';
+    for (const subject of subjectArray) {
+        options += `<option value="${subject.id}">${subject.codigo}</option>`;
     }
     return options;
 
 }
 
-const agregarItemFactura=()=>{
-     const productoSelect=document.getElementById('productosFactura');
-     const cantidadInput=document.getElementById('cantidadProducto');
-     const listadoItems=document.getElementById('listado-items');
+const showScheedulesSubject = (horarioClases) => {
+    const table = document.createElement('table');
+    table.classList.add("table", "table-striped", "table-hover", "table-borderless", "table-primary", "align-middle");
 
-     const selectedProductoIndex=productoSelect.selectedIndex;
-     const cantidad=cantidadInput.value;
-     
-     if (selectedProductoIndex === -1 || !cantidad) {
-        alert('Por favor, selecciona un producto y especifica la cantidad.');
+    const thead = document.createElement('thead');
+    const tbody = document.createElement('tbody');
+    tbody.classList.add('table-group-divider');
+
+    const headerRow = document.createElement('tr');
+    headerRow.classList.add("table-light");
+
+    const headers = ['Día', 'Hora de inicio', 'Hora de fin', 'Salón'];
+
+    headers.forEach(headerText => {
+        const header = document.createElement('th');
+        header.textContent = headerText;
+        header.scope = "col";
+        header.classList.add("text-center");
+        headerRow.appendChild(header);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    horarioClases.forEach(horario => {
+        const row = document.createElement('tr');
+        row.classList.add("table-primary");
+        const cells = [horario.dia, horario.hora_inicio, horario.hora_fin, horario.salon_id];
+
+        cells.forEach(cellText => {
+            const cell = document.createElement('td');
+            cell.textContent = cellText;
+            cell.classList.add("text-center");
+            row.appendChild(cell);
+        });
+
+        tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+
+    return table;
+};
+
+
+const addSubject = () => {
+    const subjectSelect = document.getElementById('subjectTuition');
+    const itemsList = document.getElementById('items-list');
+
+    if (subjectSelect.selectedIndex === -1) {
+        console.error('No se ha seleccionado ningún tema.');
         return;
-     }
+    }
 
-     const selectProducto=listaProductos[selectedProductoIndex];
-     const subtotal=selectProducto.precio*cantidad;
+    const subjectSelectedIndex = subjectSelect.selectedIndex;
+    const subjectSelected = subjectArray[subjectSelectedIndex];
+    const program_id = subjectSelected.programa_id;
+    const period_id = subjectSelected.periodo_id;
+    const credits = subjectSelected.creditos;
 
-     const li=document.createElement('li');
-     li.textContent= `${selectProducto.descripcion} - Cantidad: ${cantidad} - Subtotal: ${subtotal} `;
-     listadoItems.appendChild(li);
+    let credit_cost = ratesArray.find(rate => {if(rate.periodo_id === period_id && rate.programa_id === program_id){return Number(rate.costo_credito)}});
 
-     productoSelect.selectedIndex=-1;
-     cantidadInput.value='';
+    if (credit_cost) {
+        credit_cost = credit_cost.costo_credito;
+    }else if (!credit_cost){
+        alert("No se ha elegido ninguna opción")
+        return
+    }
 
+    const subtotal = credits * credit_cost;
+
+    const li = document.createElement('li');
+    li.textContent = `${subjectSelected.codigo} - Total a pagar: ${subtotal}`;
+    itemsList.appendChild(li);
+
+    // Mostrar el horario de la asignatura
+    const horarioAsignatura = showScheedulesSubject(subjectSelected.horario_clases);
+    itemsList.appendChild(horarioAsignatura);
+
+    subjectSelect.selectedIndex = -1;
 }
 
-const crearFactura=()=>{
-    const fechaInput=document.getElementById('fechaFactura');
-    const clienteSelect=document.getElementById('clienteFactura');
-    const listadoItems=document.getElementById('listado-items');
 
-    const fecha=fechaInput.value;
-    const clienteId=clienteSelect.value;
-    const itemsFactura=[];
-    let totalFactura=0;
+const crearFactura = () => {
+    const fechaInput = document.getElementById('fechaFactura');
+    const clienteSelect = document.getElementById('studentTuition');
+    const itemsList = document.getElementById('items-list');
 
-    for(const li of listadoItems.getElementsByTagName('li')){
+    const fecha = fechaInput.value;
+    const clienteId = clienteSelect.value;
+    const itemsFactura = [];
+    let totalFactura = 0;
+
+    for (const li of itemsList.getElementsByTagName('li')) {
         itemsFactura.push(li.textContent);
-        const cantidadMatch=li.textContent.match(/Cantidad: (\d+)/);
-        const subtotalMatch=li.textContent.match(/Subtotal: (\d+)/);
-      
-        if(cantidadMatch && subtotalMatch){
-            const cantidad=parseInt(cantidadMatch[1]);
-            const subtotal=parseInt(subtotalMatch[1]);
-            totalFactura+=subtotal;
+        const cantidadMatch = li.textContent.match(/Cantidad: (\d+)/);
+        const subtotalMatch = li.textContent.match(/Subtotal: (\d+)/);
+
+        if (cantidadMatch && subtotalMatch) {
+            const cantidad = parseInt(cantidadMatch[1]);
+            const subtotal = parseInt(subtotalMatch[1]);
+            totalFactura += subtotal;
         }
 
     }
 
-    if(!fecha || !clienteId || itemsFactura.length===0){
+    if (!fecha || !clienteId || itemsFactura.length === 0) {
         alert('Por favor, completa todos los campos y agrega al menos un item de la factura.');
         return;
     }
 
-    const cliente=listaClientes.find(c=>c.id===clienteId);
+    const cliente = listaClientes.find(c => c.id === clienteId);
 
-     
-      const nuevaFactura = {
-        id:listaFacturas.length+1,
+
+    const nuevaFactura = {
+        id: tuitionsArray.length + 1,
         fecha: fecha,
         cliente: cliente,
         items: itemsFactura,
-        total: totalFactura 
+        total: totalFactura
     };
 
 
-    listaFacturas.push(nuevaFactura);
-    guardarFactura(nuevaFactura);
+    tuitionsArray.push(nuevaFactura);
+    saveTuition(nuevaFactura);
 
     console.log("Factura creada ", nuevaFactura);
-    console.log("Listado de facturas:", listaFacturas);
+    console.log("Listado de facturas:", tuitionsArray);
 
-    fechaInput.value='';
-    clienteSelect.selectedIndex=0;
-    listadoItems.innerHTML='';
+    fechaInput.value = '';
+    clienteSelect.selectedIndex = 0;
+    itemsList.innerHTML = '';
 
     alert(`Factura creada con éxito! Total: ${totalFactura}`);
 
 }
 
-const mostrarListadoFacturas=()=>{
-    const facturasForm = document.getElementById('facturas-form');
-    const listadoFacturas = document.getElementById('listado-facturas');
+const showTuitions = () => {
+    const tuitionsForm = document.getElementById('tuitions-form');
+    const listadoFacturas = document.getElementById('tuitions-list');
 
     // Ocultar formulario de facturas
-    facturasForm.style.display = 'none';
+    tuitionsForm.style.display = 'none';
 
     // Mostrar listado de facturas
     listadoFacturas.style.display = 'block';
@@ -205,7 +282,7 @@ const mostrarListadoFacturas=()=>{
     ul.style.padding = '0';
 
     // Recorrer la lista de facturas y agregar cada factura como un elemento de lista (li)
-    for (const factura of listaFacturas) {
+    for (const factura of tuitionsArray) {
         const li = document.createElement('li');
         li.style.marginBottom = '15px';
         li.style.borderBottom = '1px solid #ccc';
@@ -222,7 +299,7 @@ const mostrarListadoFacturas=()=>{
         const itemsUl = document.createElement('ul');
         itemsUl.style.listStyleType = 'none';
         itemsUl.style.padding = '0';
-        
+
         // Recorrer los items de la factura y agregar cada item como un elemento de lista (li)
         for (const item of factura.items) {
             const itemLi = document.createElement('li');
@@ -248,15 +325,15 @@ const mostrarListadoFacturas=()=>{
 
 }
 
-const volverAlFormularioFacturas=()=>{
-    const facturasForm = document.getElementById('facturas-form');
-    const listadoFacturas = document.getElementById('listado-facturas');
+const volverAlFormularioFacturas = () => {
+    const tuitionsForm = document.getElementById('tuitions-form');
+    const listadoFacturas = document.getElementById('tuitions-list');
 
     // Ocultar listado de facturas
     listadoFacturas.style.display = 'none';
 
     // Mostrar formulario de facturas
-    facturasForm.style.display = 'block';
-   
+    tuitionsForm.style.display = 'block';
+
 
 }

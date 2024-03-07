@@ -102,7 +102,7 @@ const saveStudent = async (newStudent) => {
 
         alert('estudiante creado con éxito!');
 
-        //actulizarClientesEnFacturas();
+        actualizateStudentsTuitions();
 
         return newStudent;
 

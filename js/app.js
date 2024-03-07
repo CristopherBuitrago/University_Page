@@ -10,9 +10,14 @@ document.addEventListener('DOMContentLoaded',async ()=>{
     await loadCourses();
     await loadClassrooms();
 
+    await loadTuitions();
+    await loadRates();
+
     loadStudentsForm();
 
     loadTeachersForm();
 
     loadSubjectsForm();
+
+    loadTuitionsForm();
 })

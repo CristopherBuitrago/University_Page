@@ -25,8 +25,17 @@ const loadClassrooms = async () => await fetchDataSubjects('http://localhost:300
 
 // Función para generar las opciones del menú desplegable de programas
 const generatePeriods = () => periodsArray.map(period => `<option>${period.codigo}</option>`).join('');
+const generateTeachers = () => teachersList.map(teacher => `<option>${teacher.nombre}</option>`).join('');
 const generateCourses = () => coursesArray.map(course => `<option>${course.nombre}</option>`).join('');
 const generateClassRooms = () => classroomsArray.map(classroom => `<option>${classroom.numero_identificacion}</option>`).join('');
+
+// Funcion para actualizar profesores en matriculas
+const actualizateTeachersSubjects = () => {
+    const teacherSelect = document.getElementById('teachers');
+    teacherSelect.innerHTML = '';
+    const teacherOptions = generateTeachers();
+    teacherSelect.innerHTML = teacherOptions;
+}
 
 // Función para cargar el formulario al cargar la página
 const loadSubjectsForm = () => {
@@ -49,6 +58,17 @@ const loadSubjectsForm = () => {
                 <select class="form-select" id="period" required>
                     <option selected>Seleccionar</option>
                     ${generatePeriods()}
+                </select>
+            </div>
+        </div>
+
+        <!-- teacher -->
+        <div class="mb-3 row">
+            <label for="teachers" class="col-4 col-form-label">Profesores</label>
+            <div class="col-8">
+                <select class="form-select" id="teachers" required>
+                    <option selected>Seleccionar</option>
+                    ${generateTeachers()}
                 </select>
             </div>
         </div>
@@ -152,6 +172,12 @@ const getCode = (entity, list) => {
     return result ? result.codigo : "Codigo no encontrada o la lista no existe";
 }
 
+// Función para obtener el ID de una entidad
+const getIdWithCode = (entity, list) => {
+    const result = list.find(element => entity === element.codigo);
+    return result ? result.id : "Id no encontrada o la lista no existe";
+}
+
 // Función para crear asignatura    
 const createSubject = async () => {
     const period = document.getElementById('period').value;
@@ -173,6 +199,7 @@ const createSubject = async () => {
         id: subjectArray.length + 1,
         curso_id: Number(getId(course, coursesArray)),
         codigo: `${code_course}-${period}`,
+        periodo_id: Number(getIdWithCode(period, periodsArray)),
         creditos: credit,
         profesor_id: Number(getId(teacher, teachersList)),
         cupos_disponibles: 20,
@@ -189,6 +216,9 @@ const createSubject = async () => {
 
     alert('¡Asignatura creada con éxito!');
     console.log(newSubject);
+
+    actualizateSubjectsTuitions()
+
     return newSubject;
 };
 
