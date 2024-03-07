@@ -173,6 +173,22 @@ const showScheedulesSubject = (horarioClases) => {
     return table;
 };
 
+const checkScheduleOverlap = (newSchedule, existingSchedules) => {
+    for (const existingSchedule of existingSchedules) {
+        for (const newClass of newSchedule) {
+            for (const existingClass of existingSchedule) {
+                // Verificar si hay superposición en los días y horas de inicio y fin
+                if (newClass.dia === existingClass.dia &&
+                    ((newClass.hora_inicio >= existingClass.hora_inicio && newClass.hora_inicio < existingClass.hora_fin) ||
+                    (newClass.hora_fin > existingClass.hora_inicio && newClass.hora_fin <= existingClass.hora_fin))) {
+                    return true; // Hay superposición
+                }
+            }
+        }
+    }
+    return false; // No hay superposición
+};
+
 
 const addSubject = () => {
     const subjectSelect = document.getElementById('subjectTuition');
@@ -193,9 +209,9 @@ const addSubject = () => {
 
     if (credit_cost) {
         credit_cost = credit_cost.costo_credito;
-    }else if (!credit_cost){
+    } else {
         alert("No se ha elegido ninguna opción")
-        return
+        return;
     }
 
     const subtotal = credits * credit_cost;
@@ -204,21 +220,36 @@ const addSubject = () => {
     li.textContent = `${subjectSelected.codigo} - Total a pagar: ${subtotal}`;
     itemsList.appendChild(li);
 
+    // Obtener los horarios de las asignaturas ya agregadas
+    const existingSchedules = Array.from(itemsList.getElementsByClassName('schedule-row')).map(row => JSON.parse(row.dataset.schedule));
+
     // Mostrar el horario de la asignatura
     const horarioAsignatura = showScheedulesSubject(subjectSelected.horario_clases);
-    itemsList.appendChild(horarioAsignatura);
+
+    // Verificar si hay superposición de horarios
+    if (checkScheduleOverlap(subjectSelected.horario_clases, existingSchedules)) {
+        alert('¡Hay superposición de horarios! No se puede agregar esta asignatura.');
+        return;
+    }
+
+    // Agregar el horario de la asignatura a la lista de elementos
+    const row = document.createElement('tr');
+    row.classList.add('schedule-row');
+    row.dataset.schedule = JSON.stringify(subjectSelected.horario_clases);
+    row.appendChild(horarioAsignatura);
+    itemsList.appendChild(row);
 
     subjectSelect.selectedIndex = -1;
-}
+};
+
 
 
 const crearFactura = () => {
-    const fechaInput = document.getElementById('fechaFactura');
-    const clienteSelect = document.getElementById('studentTuition');
+    const studentSelected = document.getElementById('studentTuition');
     const itemsList = document.getElementById('items-list');
 
     const fecha = fechaInput.value;
-    const clienteId = clienteSelect.value;
+    const clienteId = studentSelected.value;
     const itemsFactura = [];
     let totalFactura = 0;
 
@@ -259,7 +290,7 @@ const crearFactura = () => {
     console.log("Listado de facturas:", tuitionsArray);
 
     fechaInput.value = '';
-    clienteSelect.selectedIndex = 0;
+    studentSelected.selectedIndex = 0;
     itemsList.innerHTML = '';
 
     alert(`Factura creada con éxito! Total: ${totalFactura}`);
