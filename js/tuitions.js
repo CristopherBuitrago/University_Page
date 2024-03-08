@@ -1,42 +1,39 @@
+// Arreglos para almacenar datos de matrículas y tarifas
 const tuitionsArray = [];
 const ratesArray = [];
 
+// Función para cargar matrículas desde la API
 const loadTuitions = async () => {
     try {
-
         const response = await fetch('http://localhost:3000/matriculas');
-
         if (!response.ok) {
-            throw new Error('Error al cargar matriculas. Estado: ', response.status);
+            throw new Error('Error al cargar matrículas. Estado: ', response.status);
         }
         const tuitions = await response.json();
         tuitionsArray.push(...tuitions);
-
     } catch (error) {
-        console.error("Error al cargar matriculas", error.message);
+        console.error("Error al cargar matrículas", error.message);
     }
 }
 
+// Función para cargar tarifas desde la API
 const loadRates = async () => {
     try {
-
         const response = await fetch('http://localhost:3000/tarifas');
-
         if (!response.ok) {
             throw new Error('Error al cargar tarifas. Estado: ', response.status);
         }
         const rates = await response.json();
         ratesArray.push(...rates);
         console.log(ratesArray)
-
     } catch (error) {
         console.error("Error al cargar tarifas", error.message);
     }
 }
 
+// Función para guardar nueva matrícula en la API
 const saveTuition = async (newTuition) => {
     try {
-
         const response = await fetch('http://localhost:3000/matriculas', {
             method: 'POST',
             headers: {
@@ -44,22 +41,17 @@ const saveTuition = async (newTuition) => {
             },
             body: JSON.stringify(newTuition),
         });
-
         if (!response.ok) {
-            throw new Error('Error al crear el matricula. Estado: ', response.status);
+            throw new Error('Error al crear la matrícula. Estado: ', response.status);
         }
         const tuitionCreated = await response.json();
-
-        console.log('Producto creado:', tuitionCreated);
-
+        console.log('Matrícula creada:', tuitionCreated);
     } catch (error) {
-        console.error("Error al cargar matricula", error.message);
+        console.error("Error al cargar matrícula", error.message);
     }
 }
 
-
-
-
+// Función para actualizar lista de estudiantes en el formulario
 const actualizateStudentsTuitions = () => {
     const studentSelect = document.getElementById('studentTuition');
     studentSelect.innerHTML = '';
@@ -67,6 +59,7 @@ const actualizateStudentsTuitions = () => {
     studentSelect.innerHTML = studentsOptions;
 }
 
+// Función para actualizar lista de asignaturas en el formulario
 const actualizateSubjectsTuitions = () => {
     const subjectSelect = document.getElementById('subjectTuition');
     subjectSelect.innerHTML = '';
@@ -74,6 +67,7 @@ const actualizateSubjectsTuitions = () => {
     subjectSelect.innerHTML = subjectsOptions;
 }
 
+// Función para cargar formulario de matrículas
 const loadTuitionsForm = () => {
     const tuitionsForm = document.getElementById('tuitions-form');
     tuitionsForm.innerHTML = `
@@ -97,12 +91,12 @@ const loadTuitionsForm = () => {
             </div>
                 <button class="btn btn-success mt-3" type="button" onclick="addSubject()">Agregar Asignatura</button>
                 <hr>
-                <h3>Asignaturas escogidas:</h3>
+                <h3>Matrículas escogidas:</h3>
                 <hr>
                 <ul id="items-list"></ul>
 
-            <button class="btn btn-success mt-3" type="button" onclick="createTuition()">Crear matricula</button>
-            <button class="btn btn-danger mt-3" type="button" onclick="showTuitions()">Ver matriculas</button>
+            <button class="btn btn-success mt-3" type="button" onclick="createTuition()">Crear matrícula</button>
+            <button class="btn btn-danger mt-3" type="button" onclick="showTuitions()">Ver matrículas</button>
         </form>
     `;
 
@@ -111,6 +105,7 @@ const loadTuitionsForm = () => {
 
 }
 
+// Función para generar opciones de estudiantes en el formulario
 const generateStudentsOptions = () => {
     let options = '';
     for (const student of studentsList) {
@@ -120,6 +115,7 @@ const generateStudentsOptions = () => {
 
 }
 
+// Función para generar opciones de asignaturas en el formulario
 const generateSubjectsOptions = () => {
     let options = '';
     for (const subject of subjectArray) {
@@ -129,6 +125,7 @@ const generateSubjectsOptions = () => {
 
 }
 
+// Función para mostrar horarios de asignaturas
 const showScheedulesSubject = (horarioClases) => {
     const table = document.createElement('table');
     table.classList.add("table", "table-striped", "table-hover", "table-borderless", "table-primary", "align-middle");
@@ -173,6 +170,7 @@ const showScheedulesSubject = (horarioClases) => {
     return table;
 };
 
+// Función para verificar superposición de horarios
 const checkScheduleOverlap = (newSchedule, existingSchedules) => {
     for (const existingSchedule of existingSchedules) {
         for (const newClass of newSchedule) {
@@ -189,9 +187,14 @@ const checkScheduleOverlap = (newSchedule, existingSchedules) => {
     return false; // No hay superposición
 };
 
+// Arreglo para almacenar valores de pasivos
 const pasivo = [];
-let total = 0
+// Arreglo para almacenar asignaturas agregadas
+const subjectsAdd = [];
+let period = 0;
+let total = 0;
 
+// Función para agregar asignatura al formulario de matrículas
 const addSubject = () => {
     const subjectSelect = document.getElementById('subjectTuition');
     const itemsList = document.getElementById('items-list');
@@ -203,9 +206,12 @@ const addSubject = () => {
 
     const subjectSelectedIndex = subjectSelect.selectedIndex;
     const subjectSelected = subjectArray[subjectSelectedIndex];
+    const id_subject = Number(subjectSelected.id);
     const program_id = subjectSelected.programa_id;
     const period_id = subjectSelected.periodo_id;
     const credits = subjectSelected.creditos;
+
+    period = period_id;
 
     let credit_cost = ratesArray.find(rate => { if (rate.periodo_id === period_id && rate.programa_id === program_id) { return Number(rate.costo_credito) } });
 
@@ -217,8 +223,9 @@ const addSubject = () => {
     }
 
     const subtotal = credits * credit_cost;
+    subjectsAdd.push(id_subject);
 
-    // Obtener los horarios de las asignaturas ya agregadas
+    // Obtener los horarios de las matrículas ya agregadas
     const existingSchedules = Array.from(itemsList.getElementsByClassName('schedule-table')).map(row => JSON.parse(row.dataset.schedule));
 
     // Mostrar el horario de la asignatura
@@ -238,7 +245,7 @@ const addSubject = () => {
 
 
     const li = document.createElement('li');
-    li.textContent = `${subjectSelected.codigo} - subtotal: ${subtotal} - Total: ${total}`;
+    li.textContent = `Asignatura: ${subjectSelected.codigo} - subtotal: ${subtotal} - Total: ${total}`;
     itemsList.appendChild(li);
 
     // Agregar el horario de la asignatura a la lista de elementos
@@ -249,127 +256,98 @@ const addSubject = () => {
     itemsList.appendChild(table);
 
     subjectSelect.selectedIndex = -1;
-    
-    
+
+
 };
 
-
-
+// Función para crear nueva matrícula
 const createTuition = () => {
-    //la lista de pasivos se reinicia
+    //La lista de pasivos queda limpia
     pasivo.length = 0;
+
+    //! Creamos la nueva matricula
+
+    // Obtenemos el id del estudiante y de las asignaturas
+    const studentSelect = document.getElementById('studentTuition');
+    const studentSelectedIndex = studentSelect.selectedIndex;
+    const selectedStudent = studentsList[studentSelectedIndex];
+    const idStudent = Number(selectedStudent.id);
+
     
-    const studentSelected = document.getElementById('studentTuition');
-    const itemsList = document.getElementById('items-list');
-
-    const clienteId = studentSelected.value;
-    const itemsFactura = [];
-    let totalTuition = 0;
-
-    for (const li of itemsList.getElementsByTagName('li')) {
-        itemsFactura.push(li.textContent);
-        const cantidadMatch = li.textContent.match(/Cantidad: (\d+)/);
-        const subtotalMatch = li.textContent.match(/Subtotal: (\d+)/);
-
-        if (cantidadMatch && subtotalMatch) {
-            const cantidad = parseInt(cantidadMatch[1]);
-            const subtotal = parseInt(subtotalMatch[1]);
-            totalTuition += subtotal;
-        }
-
-    }
-
-    if (!fecha || !clienteId || itemsFactura.length === 0) {
-        alert('Por favor, completa todos los campos y agrega al menos un item de la factura.');
-        return;
-    }
-
-    const cliente = listaClientes.find(c => c.id === clienteId);
-
-
-    const nuevaFactura = {
+    // Crear un objeto de matriculas
+    const newTuition = {
         id: tuitionsArray.length + 1,
-        fecha: fecha,
-        cliente: cliente,
-        items: itemsFactura,
-        total: totalTuition
+        estudiante_id: idStudent,
+        asignatura_id: subjectsAdd,
+        periodo_id: period,
+        precio: total
     };
 
-
-    tuitionsArray.push(nuevaFactura);
-    saveTuition(nuevaFactura);
-
-    console.log("Factura creada ", nuevaFactura);
-    console.log("Listado de facturas:", tuitionsArray);
-
-    fechaInput.value = '';
-    studentSelected.selectedIndex = 0;
-    itemsList.innerHTML = '';
-
-    alert(`Factura creada con éxito! Total: ${totalTuition}`);
+    // Imprimimos en la consola para ver los resultados esperados   
+    saveTuition(newTuition);
+    alert("Matricula creada con exito");
+    
+    // El total vuelve a ser 0
+    total.length = 0
 
 }
 
-const showTuitions = () => {
+// Función para crear celda de tabla con contenido
+const createCellTuition = (content) => {
+    const cell = document.createElement("td");
+    cell.textContent = content;
+    return cell;
+};
+
+// Función para mostrar lista de matrículas
+const showTuitions = async () => {
+    await loadTuitions();
     const tuitionsForm = document.getElementById('tuitions-form');
-    const listadoFacturas = document.getElementById('tuitions-list');
-
-    // Ocultar formulario de facturas
+    const tuitionListed = document.getElementById('tuitions-list');
+    
+    // Oculta el formulario y muestra la lista de matrículas
     tuitionsForm.style.display = 'none';
+    tuitionListed.style.display = 'block';
 
-    // Mostrar listado de facturas
-    listadoFacturas.style.display = 'block';
+    // Crea la estructura de la tabla para mostrar la lista de matrículas
+    tuitionListed.innerHTML = `
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-borderless table-primary align-middle">
+                <thead class="table-light">
+                    <caption>Matrículas</caption>
+                    <tr>
+                        <th>ID</th>
+                        <th>Estudiante</th>
+                        <th>Asignaturas</th>
+                        <th>Periodo</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider" id="info-tuition"></tbody>
+            </table>
+        </div>
+    `;
+    // Llena la tabla con los datos de los matrículas
+    tuitionsArray.forEach(({ id, estudiante_id, asignatura_id, periodo_id, precio}) => {
+        const row = document.createElement("tr");
+        row.classList.add("table-primary");
+        [id, estudiante_id, asignatura_id, periodo_id, precio].forEach(content => {
+            row.appendChild(createCellTuition(content));
+        });
+        document.getElementById("info-tuition").appendChild(row);
+    });
 
-    // Crear una lista (ul) para mostrar las facturas
-    const ul = document.createElement('ul');
-    ul.style.listStyleType = 'none';
-    ul.style.padding = '0';
-
-    // Recorrer la lista de facturas y agregar cada factura como un elemento de lista (li)
-    for (const factura of tuitionsArray) {
-        const li = document.createElement('li');
-        li.style.marginBottom = '15px';
-        li.style.borderBottom = '1px solid #ccc';
-        li.style.paddingBottom = '10px';
-
-
-        const fecha = factura.fecha;
-
-        const fechaCliente = document.createElement('div');
-        fechaCliente.style.fontWeight = 'bold';
-        fechaCliente.textContent = `Fecha: ${fecha}, Cliente: ${factura.cliente.nombre}, Total: ${factura.total}`;
-        li.appendChild(fechaCliente);
-
-        const itemsUl = document.createElement('ul');
-        itemsUl.style.listStyleType = 'none';
-        itemsUl.style.padding = '0';
-
-        // Recorrer los items de la factura y agregar cada item como un elemento de lista (li)
-        for (const item of factura.items) {
-            const itemLi = document.createElement('li');
-            itemLi.textContent = `Producto: ${item}`;
-            itemsUl.appendChild(itemLi);
-        }
-
-        li.appendChild(itemsUl);
-        ul.appendChild(li);
-    }
-
-    // Limpiar el contenido anterior del contenedor de listado de facturas
-    listadoFacturas.innerHTML = '';
-
-    // Agregar la lista al contenedor
-    listadoFacturas.appendChild(ul);
-
-    // Agregar botón para volver al formulario de facturas
+    // Agrega un botón para volver al formulario
     const volverButton = document.createElement('button');
-    volverButton.textContent = 'Volver al Formulario de Facturas';
-    volverButton.addEventListener('click', volverAlFormularioFacturas);
-    listadoFacturas.appendChild(volverButton);
+    volverButton.setAttribute("class", "btn btn-danger");
+    volverButton.textContent = 'Volver al Formulario';
+    volverButton.addEventListener('click', volverFormularioTuitions);
+    tuitionListed.appendChild(volverButton);
 
-}
+};
 
-const volverAlFormularioFacturas = () => {
+// Función para volver al formulario de matrículas
+const volverAlFormularioMatriculas = () => {
     const tuitionsForm = document.getElementById('tuitions-form');
     const listadoFacturas = document.getElementById('tuitions-list');
 
@@ -378,6 +356,5 @@ const volverAlFormularioFacturas = () => {
 
     // Mostrar formulario de facturas
     tuitionsForm.style.display = 'block';
-
-
 }
+
