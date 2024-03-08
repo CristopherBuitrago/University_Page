@@ -101,7 +101,7 @@ const loadTuitionsForm = () => {
                 <hr>
                 <ul id="items-list"></ul>
 
-            <button class="btn btn-success mt-3" type="button" onclick="crearFactura()">Crear matricula</button>
+            <button class="btn btn-success mt-3" type="button" onclick="createTuition()">Crear matricula</button>
             <button class="btn btn-danger mt-3" type="button" onclick="showTuitions()">Ver matriculas</button>
         </form>
     `;
@@ -189,13 +189,15 @@ const checkScheduleOverlap = (newSchedule, existingSchedules) => {
     return false; // No hay superposición
 };
 
+const pasivo = [];
+let total = 0
 
 const addSubject = () => {
     const subjectSelect = document.getElementById('subjectTuition');
     const itemsList = document.getElementById('items-list');
 
     if (subjectSelect.selectedIndex === -1) {
-        console.error('No se ha seleccionado ningún tema.');
+        alert('No se ha seleccionado ningún tema.');
         return;
     }
 
@@ -214,17 +216,10 @@ const addSubject = () => {
         return;
     }
 
-    const pasivo = [];
     const subtotal = credits * credit_cost;
 
-    pasivo.push(subtotal);
-
-    const total = match.sum(pasivo)
-
-
-
     // Obtener los horarios de las asignaturas ya agregadas
-    const existingSchedules = Array.from(itemsList.getElementsByClassName('schedule-row')).map(row => JSON.parse(row.dataset.schedule));
+    const existingSchedules = Array.from(itemsList.getElementsByClassName('schedule-table')).map(row => JSON.parse(row.dataset.schedule));
 
     // Mostrar el horario de la asignatura
     const horarioAsignatura = showScheedulesSubject(subjectSelected.horario_clases);
@@ -235,30 +230,41 @@ const addSubject = () => {
         return;
     }
 
+    // Agregar el subtotal a pasivo
+    pasivo.push(subtotal);
+
+    // Calcular el total sumando todos los elementos en pasivo
+    total = pasivo.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+
     const li = document.createElement('li');
-    li.textContent = `${subjectSelected.codigo} - Total a pagar: ${subtotal}`;
+    li.textContent = `${subjectSelected.codigo} - subtotal: ${subtotal} - Total: ${total}`;
     itemsList.appendChild(li);
 
     // Agregar el horario de la asignatura a la lista de elementos
-    const row = document.createElement('tr');
-    row.classList.add('schedule-row');
-    row.dataset.schedule = JSON.stringify(subjectSelected.horario_clases);
-    row.appendChild(horarioAsignatura);
-    itemsList.appendChild(row);
+    const table = document.createElement('div');
+    table.classList.add('schedule-table', 'container');
+    table.dataset.schedule = JSON.stringify(subjectSelected.horario_clases);
+    table.appendChild(horarioAsignatura);
+    itemsList.appendChild(table);
 
     subjectSelect.selectedIndex = -1;
+    
+    
 };
 
 
 
-const crearFactura = () => {
+const createTuition = () => {
+    //la lista de pasivos se reinicia
+    pasivo.length = 0;
+    
     const studentSelected = document.getElementById('studentTuition');
     const itemsList = document.getElementById('items-list');
 
-    const fecha = fechaInput.value;
     const clienteId = studentSelected.value;
     const itemsFactura = [];
-    let totalFactura = 0;
+    let totalTuition = 0;
 
     for (const li of itemsList.getElementsByTagName('li')) {
         itemsFactura.push(li.textContent);
@@ -268,7 +274,7 @@ const crearFactura = () => {
         if (cantidadMatch && subtotalMatch) {
             const cantidad = parseInt(cantidadMatch[1]);
             const subtotal = parseInt(subtotalMatch[1]);
-            totalFactura += subtotal;
+            totalTuition += subtotal;
         }
 
     }
@@ -286,7 +292,7 @@ const crearFactura = () => {
         fecha: fecha,
         cliente: cliente,
         items: itemsFactura,
-        total: totalFactura
+        total: totalTuition
     };
 
 
@@ -300,7 +306,7 @@ const crearFactura = () => {
     studentSelected.selectedIndex = 0;
     itemsList.innerHTML = '';
 
-    alert(`Factura creada con éxito! Total: ${totalFactura}`);
+    alert(`Factura creada con éxito! Total: ${totalTuition}`);
 
 }
 
