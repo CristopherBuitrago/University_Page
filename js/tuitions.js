@@ -180,7 +180,7 @@ const checkScheduleOverlap = (newSchedule, existingSchedules) => {
                 // Verificar si hay superposición en los días y horas de inicio y fin
                 if (newClass.dia === existingClass.dia &&
                     ((newClass.hora_inicio >= existingClass.hora_inicio && newClass.hora_inicio < existingClass.hora_fin) ||
-                    (newClass.hora_fin > existingClass.hora_inicio && newClass.hora_fin <= existingClass.hora_fin))) {
+                        (newClass.hora_fin > existingClass.hora_inicio && newClass.hora_fin <= existingClass.hora_fin))) {
                     return true; // Hay superposición
                 }
             }
@@ -205,7 +205,7 @@ const addSubject = () => {
     const period_id = subjectSelected.periodo_id;
     const credits = subjectSelected.creditos;
 
-    let credit_cost = ratesArray.find(rate => {if(rate.periodo_id === period_id && rate.programa_id === program_id){return Number(rate.costo_credito)}});
+    let credit_cost = ratesArray.find(rate => { if (rate.periodo_id === period_id && rate.programa_id === program_id) { return Number(rate.costo_credito) } });
 
     if (credit_cost) {
         credit_cost = credit_cost.costo_credito;
@@ -214,11 +214,14 @@ const addSubject = () => {
         return;
     }
 
+    const pasivo = [];
     const subtotal = credits * credit_cost;
 
-    const li = document.createElement('li');
-    li.textContent = `${subjectSelected.codigo} - Total a pagar: ${subtotal}`;
-    itemsList.appendChild(li);
+    pasivo.push(subtotal);
+
+    const total = match.sum(pasivo)
+
+
 
     // Obtener los horarios de las asignaturas ya agregadas
     const existingSchedules = Array.from(itemsList.getElementsByClassName('schedule-row')).map(row => JSON.parse(row.dataset.schedule));
@@ -231,6 +234,10 @@ const addSubject = () => {
         alert('¡Hay superposición de horarios! No se puede agregar esta asignatura.');
         return;
     }
+
+    const li = document.createElement('li');
+    li.textContent = `${subjectSelected.codigo} - Total a pagar: ${subtotal}`;
+    itemsList.appendChild(li);
 
     // Agregar el horario de la asignatura a la lista de elementos
     const row = document.createElement('tr');
