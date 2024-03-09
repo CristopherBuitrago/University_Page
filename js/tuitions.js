@@ -42,12 +42,36 @@ const saveTuition = async (newTuition) => {
             body: JSON.stringify(newTuition),
         });
         if (!response.ok) {
-            throw new Error('Error al crear la matrícula. Estado: ', response.status);
+            throw new Error('Error al modificar la matrícula. Estado: ', response.status);
         }
         const tuitionCreated = await response.json();
         console.log('Matrícula creada:', tuitionCreated);
     } catch (error) {
         console.error("Error al cargar matrícula", error.message);
+    }
+}
+
+//Funcion para restar un cupo
+
+const quotaLess = async (chooseSubject) => {
+    try {
+        // Restar un cupo disponible
+        const response = await fetch(`http://localhost:3000/asignaturas/${chooseSubject}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ cupos_disponibles: 19 }), // Resta un cupo disponible
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al modificar los cupos disponibles. Estado: ', response.status);
+        }
+
+        const updatedSubject = await response.json();
+        console.log('Cupo disponible restado. Nueva asignatura:', updatedSubject);
+    } catch (error) {
+        console.error("Error al restar cupo disponible", error.message);
     }
 }
 
@@ -221,10 +245,6 @@ const addSubject = () => {
         alert("No se ha elegido ninguna opción")
         return;
     }
-
-    const subtotal = credits * credit_cost;
-    subjectsAdd.push(id_subject);
-
     // Obtener los horarios de las matrículas ya agregadas
     const existingSchedules = Array.from(itemsList.getElementsByClassName('schedule-table')).map(row => JSON.parse(row.dataset.schedule));
 
@@ -237,6 +257,9 @@ const addSubject = () => {
         return;
     }
 
+    const subtotal = credits * credit_cost;
+    // Agregar la asignatura al array subjects
+    subjectsAdd.push(id_subject);
     // Agregar el subtotal a pasivo
     pasivo.push(subtotal);
 
@@ -261,7 +284,7 @@ const addSubject = () => {
 };
 
 //crear nueva matricula
-const createTuition = () => {
+const createTuition = async () => {
     // Verificar si se ha seleccionado un estudiante y al menos una asignatura
     const studentSelect = document.getElementById('studentTuition');
     const studentSelectedIndex = studentSelect.selectedIndex;
@@ -281,6 +304,11 @@ const createTuition = () => {
     // Obtenemos el id del estudiante y de las asignaturas
     const selectedStudent = studentsList[studentSelectedIndex];
     const idStudent = Number(selectedStudent.id);
+
+    // restamos un cupo en las asignaturas elegidas
+    for (id of subjectsAdd){
+        quotaLess(id)
+    }
 
     // Crear un objeto de matriculas
     const newTuition = {
