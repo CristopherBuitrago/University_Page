@@ -1,4 +1,4 @@
- // Declaración de arrays para almacenar la lista de estudiantes y departamentos
+// Declaración de arrays para almacenar la lista de estudiantes y departamentos
 const teachersList = [];
 const departamentsList = [];
 
@@ -55,11 +55,16 @@ const createTeacher = async () => {
     let docNumbInput = document.getElementById('teacherDocumentNumber');
     let teachDepInput = document.getElementById('teacherDepartament');
 
-    const name = nameInput.value;
-    const lastName = lastNameInput.value;
-    const docType = docInput.value;
-    const docNumb = docNumbInput.value;
-    const teachDep = teachDepInput.value;
+    const name = nameInput.value.trim();
+    const lastName = lastNameInput.value.trim();
+    const docType = docInput.value.trim();
+    const docNumb = docNumbInput.value.trim();
+    const teachDep = teachDepInput.value.trim();
+
+    if (!name || !lastName || !docType || !docNumb || !teachDep) {
+        alert("Por favor complete todos los campos");
+        return;
+    }
 
     const newTeacher = {
         id: teachersList.length + 1,
@@ -70,23 +75,23 @@ const createTeacher = async () => {
         departamento_id: teachDep,
     }
 
-
     await saveTeacher(newTeacher);
     await loadTeachers();
 
-    nameInput = "";
-    lastNameInput = "";
-    docInput = "";
-    docNumbInput = "";
-    teachDepInput = "";
+    // Limpiar los campos después de crear el maestro
+    nameInput.value = "";
+    lastNameInput.value = "";
+    docInput.value = "";
+    docNumbInput.value = "";
+    teachDepInput.value = "";
 
-    alert('Maestro creado con éxito!');
+    alert('¡Maestro creado con éxito!');
 
     actualizateTeachersSubjects();
 
     return newTeacher;
-
 }
+
 
 // Función para crear una celda de tabla con contenido dado
 const createCellTeacher = (content) => {
@@ -100,7 +105,7 @@ const showListTeacher = async () => {
     await loadTeachers();
     const teacherForm = document.getElementById('teachers-form');
     const teachersListed = document.getElementById('teachers-list');
-    
+
     // Oculta el formulario y muestra la lista de estudiantes
     teacherForm.style.display = 'none';
     teachersListed.style.display = 'block';
@@ -161,7 +166,7 @@ const generateDepartaments = () => {
 const loadTeachersForm = () => {
     const teacherForm = document.getElementById('teachers-form');
     const teachersListed = document.getElementById('teachers-list');
-    
+
     // Oculta la lista de estudiantes al cargar el formulario
     teachersListed.style.display = 'none';
 

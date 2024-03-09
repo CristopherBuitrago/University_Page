@@ -260,20 +260,28 @@ const addSubject = () => {
 
 };
 
-// Función para crear nueva matrícula
+//crear nueva matricula
 const createTuition = () => {
-    //La lista de pasivos queda limpia
-    pasivo.length = 0;
-
-    //! Creamos la nueva matricula
-
-    // Obtenemos el id del estudiante y de las asignaturas
+    // Verificar si se ha seleccionado un estudiante y al menos una asignatura
     const studentSelect = document.getElementById('studentTuition');
     const studentSelectedIndex = studentSelect.selectedIndex;
+    if (studentSelectedIndex === -1) {
+        alert("Por favor seleccione un estudiante.");
+        return;
+    }
+
+    if (subjectsAdd.length === 0) {
+        alert("Por favor agregue al menos una asignatura.");
+        return;
+    }
+
+    // La lista de pasivos queda limpia
+    pasivo.length = 0;
+
+    // Obtenemos el id del estudiante y de las asignaturas
     const selectedStudent = studentsList[studentSelectedIndex];
     const idStudent = Number(selectedStudent.id);
 
-    
     // Crear un objeto de matriculas
     const newTuition = {
         id: tuitionsArray.length + 1,
@@ -285,11 +293,10 @@ const createTuition = () => {
 
     // Imprimimos en la consola para ver los resultados esperados   
     saveTuition(newTuition);
-    alert("Matricula creada con exito");
-    
-    // El total vuelve a ser 0
-    total.length = 0
+    alert("Matricula creada con éxito");
 
+    // El total vuelve a ser 0
+    total.length = 0;
 }
 
 // Función para crear celda de tabla con contenido
@@ -304,7 +311,7 @@ const showTuitions = async () => {
     await loadTuitions();
     const tuitionsForm = document.getElementById('tuitions-form');
     const tuitionListed = document.getElementById('tuitions-list');
-    
+
     // Oculta el formulario y muestra la lista de matrículas
     tuitionsForm.style.display = 'none';
     tuitionListed.style.display = 'block';
@@ -328,7 +335,7 @@ const showTuitions = async () => {
         </div>
     `;
     // Llena la tabla con los datos de los matrículas
-    tuitionsArray.forEach(({ id, estudiante_id, asignatura_id, periodo_id, precio}) => {
+    tuitionsArray.forEach(({ id, estudiante_id, asignatura_id, periodo_id, precio }) => {
         const row = document.createElement("tr");
         row.classList.add("table-primary");
         [id, estudiante_id, asignatura_id, periodo_id, precio].forEach(content => {
@@ -341,7 +348,7 @@ const showTuitions = async () => {
     const volverButton = document.createElement('button');
     volverButton.setAttribute("class", "btn btn-danger");
     volverButton.textContent = 'Volver al Formulario';
-    volverButton.addEventListener('click', volverFormularioTuitions);
+    volverButton.addEventListener('click', volverAlFormularioMatriculas);
     tuitionListed.appendChild(volverButton);
 
 };

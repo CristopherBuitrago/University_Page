@@ -44,9 +44,9 @@ const loadSubjectsForm = () => {
 
     // Oculta la lista de asignaturas al cargar el formulario
     subjectsListed.style.display = 'none';
-    
+
     // Extraemos los nombres de los cursos
-    const coursesNames = coursesArray.map(course => course.nombre); 
+    const coursesNames = coursesArray.map(course => course.nombre);
 
     // Crea el formulario
     subjectForm.innerHTML = `
@@ -148,7 +148,7 @@ const saveSubject = async (newSubject) => {
     try {
         const response = await fetch('http://localhost:3000/asignaturas', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newSubject),
         });
 
@@ -178,22 +178,34 @@ const getIdWithCode = (entity, list) => {
     return result ? result.id : "Id no encontrada o la lista no existe";
 }
 
-// Función para crear asignatura    
+//función para crear una asignatura
 const createSubject = async () => {
-    const period = document.getElementById('period').value;
-    const course = document.getElementById('courses').value;
-    const credit = document.getElementById('credits').value;
-    const teacher = document.getElementById('teachers').value;
-    const program = document.getElementById('programs').value;
-    const day = document.getElementById('dia').value;
-    const begin = document.getElementById('hora_inicio').value;
-    const end = document.getElementById('hora_fin').value;
-    const classRoom = document.getElementById('salon').value;
+    const period = document.getElementById('period').value.trim();
+    const course = document.getElementById('courses').value.trim();
+    const credit = document.getElementById('credits').value.trim();
+    const teacher = document.getElementById('teachers').value.trim();
+    const program = document.getElementById('programs').value.trim();
+    const day = document.getElementById('dia').value.trim();
+    const begin = document.getElementById('hora_inicio').value.trim();
+    const end = document.getElementById('hora_fin').value.trim();
+    const classRoom = document.getElementById('salon').value.trim();
 
+    // Verificar si algún campo está vacío
+    if (!period || !course || !credit || !teacher || !program || !day || !begin || !end || !classRoom) {
+        alert("Por favor complete todos los campos");
+        return;
+    }
+
+    //verificar que los creditos sean mayores a 0
+    
+    if(credit < 1){
+        alert("Los creditos no pueden ser negativos");
+        return
+    }
     // Obtener el ID del periodo y del curso para encontrar el código del curso
     const code_course = getCode(course, coursesArray);
 
-    const scheedule = {dia: day, hora_inicio: begin, hora_fin: end, salon_id: classRoom};
+    const scheedule = { dia: day, hora_inicio: begin, hora_fin: end, salon_id: classRoom };
 
     const newSubject = {
         id: subjectArray.length + 1,
@@ -217,10 +229,11 @@ const createSubject = async () => {
     alert('¡Asignatura creada con éxito!');
     console.log(newSubject);
 
-    actualizateSubjectsTuitions()
+    actualizateSubjectsTuitions();
 
     return newSubject;
 };
+
 
 // Función para crear una celda de tabla con contenido dado
 const createCellSubject = (content) => {
@@ -234,7 +247,7 @@ const showListSubject = async () => {
     await loadSubjects();
     const subjectsForm = document.getElementById('subjects-form');
     const subjectListed = document.getElementById('subject-list');
-    
+
     // Oculta el formulario y muestra la lista de asignaturas
     subjectsForm.style.display = 'none';
     subjectListed.style.display = 'block';
@@ -256,7 +269,7 @@ const showListSubject = async () => {
         </div>
     `;
     // Llena la tabla con los datos de los asignaturas
-    subjectArray.forEach(({ id, codigo, creditos}) => {
+    subjectArray.forEach(({ id, codigo, creditos }) => {
         const row = document.createElement("tr");
         row.classList.add("table-primary");
         [id, codigo, creditos].forEach(content => {
@@ -281,5 +294,5 @@ const volverFormularioSubjects = () => {
 
     // Oculta la lista de asignaturas y muestra el formulario
     subjectListed.style.display = 'none';
-    subjectsForm.style.display = 'block';   
+    subjectsForm.style.display = 'block';
 };
