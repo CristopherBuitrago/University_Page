@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded',async ()=>{
     await loadTuitions();
     await loadRates();
 
+    await updateFeaturedSubject();
+
     loadStudentsForm();
 
     loadTeachersForm();
