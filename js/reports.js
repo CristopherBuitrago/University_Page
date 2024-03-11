@@ -84,6 +84,83 @@ const calculateTuitionCosts = async () => {
     }
 };
 
+// Función para cargar los datos de asignaturas destacadas desde el servidor
+const fetchFeaturedSubjects = async () => {
+    try {
+        const response = await fetch('http://localhost:3000/asignaturas');
+        if (!response.ok) throw new Error(`Error al cargar datos. Estado: ${response.status}`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(`Error al cargar datos: ${error.message}`);
+        return [];
+    }
+};
+
+// Función para cargar los datos de matrículas desde el servidor
+const fetchTuitionData = async () => {
+    try {
+        const response = await fetch('http://localhost:3000/matriculas');
+        if (!response.ok) throw new Error(`Error al cargar datos. Estado: ${response.status}`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(`Error al cargar datos: ${error.message}`);
+        return [];
+    }
+};
+
+// Función para actualizar el contenido de los elementos HTML
+const updateElements = async () => {
+    try {
+        // Obtener los datos de asignaturas destacadas
+        const featuredSubjects = await fetchFeaturedSubjects();
+        if (featuredSubjects.length > 0) {
+            const featuredSubject = featuredSubjects[0]; // Obtener la primera asignatura destacada
+            const featuredSubjectElement = document.getElementById('featuredSubject');
+            if (featuredSubjectElement) {
+                featuredSubjectElement.innerHTML = `
+                    <strong>ID:</strong> ${featuredSubject.id}<br>
+                    <strong>Código:</strong> ${featuredSubject.codigo}<br>
+                    <strong>Cupos Disponibles:</strong> ${featuredSubject.cupos_disponibles}<br><br>
+                `;
+            }
+        }
+
+        // Obtener los datos de matrículas
+        const tuitionData = await fetchTuitionData();
+        const tuitionInfoElement = document.getElementById('numberTuitions');
+        if (tuitionInfoElement) {
+            let tuitionInfo = '';
+            // Calcular la cantidad de matrículas por período y el total recaudado
+            const tuitionsByPeriod = {};
+            let totalRevenue = 0;
+            tuitionData.forEach(matricula => {
+                if (!tuitionsByPeriod.hasOwnProperty(matricula.periodo_id)) {
+                    tuitionsByPeriod[matricula.periodo_id] = 1;
+                } else {
+                    tuitionsByPeriod[matricula.periodo_id]++;
+                }
+                totalRevenue += matricula.precio;
+            });
+            // Actualizar el contenido del elemento HTML con la información de matrículas
+            for (const periodo_id in tuitionsByPeriod) {
+                if (tuitionsByPeriod.hasOwnProperty(periodo_id)) {
+                    tuitionInfo += `Período ${periodo_id}: ${tuitionsByPeriod[periodo_id]} matrículas<br>`;
+                }
+            }
+            tuitionInfo += `Total recaudado: ${totalRevenue}<br><br>`;
+            tuitionInfoElement.innerHTML = tuitionInfo;
+        }
+    } catch (error) {
+        console.error(`Error al actualizar elementos: ${error.message}`);
+    }
+};
+
+// Llamar a la función para actualizar los elementos cada 5 segundos (5000 milisegundos)
+setInterval(updateElements, 5000);
+
+
 // Llamar a la función para calcular los costos de matrícula
 calculateTuitionCosts();
 
