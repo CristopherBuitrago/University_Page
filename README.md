@@ -1,4 +1,4 @@
-# proyecto_javascript
+# Javascript - project
 
-la base de datos está en este mismo git pero en otro repositorio que se llama `JSON-server` allí podrás encontrar toda la información relacionada
+The database is in this same git but in another repository called `JSON-server`. There you can find all the related information.
 
