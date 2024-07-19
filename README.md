@@ -28,10 +28,10 @@ First, clone both the main project and the `JSON-server` repository.
 
 ```sh
 # Clone the main project repository
-git clone <URL-of-your-main-project-repo>
+git clone https://github.com/CristopherBuitrago/University_Page.git
 
 # Clone the JSON-server repository
-git clone <URL-of-your-JSON-server-repo>
+git clone https://github.com/CristopherBuitrago/JSON-server.git
 ```
 
 ### Setting Up the Database
@@ -59,10 +59,6 @@ This will start the server, typically running at `http://localhost:3000`.
 ### Running the Project Locally
 
 1. Navigate to the main project directory.
-
-```sh
-cd <main-project-directory>
-```
 
 2. Open the `index.html` file in your preferred browser to view the project locally.
 
