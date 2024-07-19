@@ -1,7 +1,3 @@
-Sure, here's an improved version of your README for the JavaScript project. This version is more structured, detailed, and user-friendly:
-
----
-
 # JavaScript Project 📽️
 
 Welcome to the JavaScript Project! This project showcases a movie-related application. Below, you'll find all the information needed to get started, including links to the live page and instructions on how to set up the database.
